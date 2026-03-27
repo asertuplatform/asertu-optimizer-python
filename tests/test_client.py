@@ -11,6 +11,7 @@ from asertu_optimizer import (
     AsyncAsertuOptimizerClient,
     AuthenticationError,
     ContractUnavailableError,
+    InMemoryTelemetryCollector,
     MissingCredentialsError,
     ValidationError,
 )
@@ -96,7 +97,8 @@ def test_tenants_list_uses_bearer_auth() -> None:
         return httpx.Response(
             200,
             json={
-                "items": [
+                "user": {"sub": "user-1", "email": "dev@asertu.ai"},
+                "tenants": [
                     {
                         "tenant_id": "tenant-1",
                         "name": "Acme",
@@ -120,6 +122,8 @@ def test_tenants_list_uses_bearer_auth() -> None:
 
     assert len(result.items) == 1
     assert result.items[0].name == "Acme"
+    assert result.user is not None
+    assert result.user.email == "dev@asertu.ai"
 
 
 def test_auth_override_per_call() -> None:
@@ -439,5 +443,153 @@ def test_async_dashboard_summary() -> None:
 
         assert result.total_requests == 7
         assert result.total_cost == 1.23
+
+    asyncio.run(run())
+
+
+def test_billing_catalog_maps_new_contract() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.headers["Authorization"] == "Bearer jwt-token"
+        assert request.headers["X-Tenant-Id"] == "tenant-123"
+        assert request.url.path == "/v1/billing/catalog"
+        return httpx.Response(
+            200,
+            json={
+                "tenant": {"tenant_id": "tenant-123", "name": "Acme"},
+                "current_subscription": {
+                    "tenant_id": "tenant-123",
+                    "plan_id": "pro",
+                    "plan_name": "Pro",
+                    "monthly_price": 99.0,
+                    "currency": "USD",
+                },
+                "plans": [
+                    {
+                        "plan_id": "free",
+                        "name": "Free",
+                        "tier_order": 0,
+                        "currency": "USD",
+                        "monthly_price": 0,
+                        "summary": "Starter",
+                        "highlights": ["basic analytics"],
+                        "features": ["dashboard"],
+                        "limits": {"requests_per_day": 1000},
+                    }
+                ],
+                "provider_options": {
+                    "stripe": {
+                        "provider": "stripe",
+                        "enabled": True,
+                        "configured": True,
+                        "missing_fields": [],
+                    }
+                },
+                "billing_history": [],
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        tenant_id="tenant-123",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    result = client.billing.catalog()
+
+    assert result.current_subscription is not None
+    assert result.current_subscription.plan_id == "pro"
+    assert result.plans[0].plan_id == "free"
+    assert result.provider_options["stripe"].enabled is True
+
+
+def test_settings_workspace_maps_new_contract() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/v1/settings/workspace"
+        return httpx.Response(
+            200,
+            json={
+                "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                "members": [
+                    {
+                        "email": "owner@acme.ai",
+                        "role": "owner",
+                        "status": "active",
+                        "is_default": True,
+                        "created_at": "2026-03-27T10:00:00Z",
+                    }
+                ],
+                "invitations": [],
+                "my_access_requests": [],
+                "access_queue": [],
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        tenant_id="tenant-123",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    result = client.settings.workspace()
+
+    assert result.workspace is not None
+    assert result.workspace.name == "Acme"
+    assert result.members[0].email == "owner@acme.ai"
+
+
+def test_sync_telemetry_emits_events() -> None:
+    collector = InMemoryTelemetryCollector()
+
+    def handler(_: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"items": []})
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        telemetry_handler=collector,
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    client.tenants.list()
+
+    assert len(collector.events) == 1
+    assert collector.events[0].method == "GET"
+    assert collector.events[0].path == "/v1/tenants"
+    assert collector.events[0].success is True
+
+
+def test_async_settings_invite_member() -> None:
+    async def run() -> None:
+        def handler(request: httpx.Request) -> httpx.Response:
+            assert request.url.path == "/v1/settings/invitations"
+            body = json.loads(request.content.decode())
+            assert body["email"] == "member@acme.ai"
+            return httpx.Response(200, json={"message": "Invitation created", "status": "created"})
+
+        client = AsyncAsertuOptimizerClient(
+            bearer_token="jwt-token",
+            tenant_id="tenant-123",
+            http_client=httpx.AsyncClient(
+                base_url="https://api.dev.asertu.ai",
+                transport=httpx.MockTransport(handler),
+            ),
+        )
+        try:
+            result = await client.settings.invite_member(
+                email="member@acme.ai",
+                role="viewer",
+            )
+        finally:
+            await client.aclose()
+
+        assert result.status == "created"
 
     asyncio.run(run())

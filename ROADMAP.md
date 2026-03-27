@@ -37,6 +37,8 @@ Estado: bloqueado por contrato
 
 ## 1.3.0
 
+Estado: completado
+
 - incorporar telemetria del propio SDK
 - ampliar ejemplos end-to-end por casos de uso de producto
 - documentar patrones de despliegue y multi-tenant production hardening

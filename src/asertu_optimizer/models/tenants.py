@@ -13,6 +13,10 @@ class Tenant:
     role: str | None = None
     plan: str | None = None
     is_default: bool | None = None
+    plan_id: str | None = None
+    plan_name: str | None = None
+    subscription_status: str | None = None
+    renewal_date: str | None = None
 
     @classmethod
     def from_dict(cls, data: JsonDict) -> Tenant:
@@ -22,16 +26,43 @@ class Tenant:
             role=data.get("role"),
             plan=data.get("plan"),
             is_default=data.get("is_default"),
+            plan_id=data.get("plan_id"),
+            plan_name=data.get("plan_name"),
+            subscription_status=data.get("subscription_status"),
+            renewal_date=data.get("renewal_date"),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class AuthenticatedUser:
+    sub: str | None = None
+    email: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: JsonDict) -> AuthenticatedUser:
+        return cls(
+            sub=data.get("sub"),
+            email=data.get("email"),
         )
 
 
 @dataclass(frozen=True, slots=True)
 class TenantList:
-    items: list[Tenant] = field(default_factory=list)
+    tenants: list[Tenant] = field(default_factory=list)
+    user: AuthenticatedUser | None = None
 
     @classmethod
     def from_dict(cls, data: JsonDict) -> TenantList:
-        return cls(items=[Tenant.from_dict(item) for item in data.get("items", [])])
+        raw_items = data.get("tenants", data.get("items", [])) or []
+        user = data.get("user")
+        return cls(
+            tenants=[Tenant.from_dict(item) for item in raw_items],
+            user=AuthenticatedUser.from_dict(user) if isinstance(user, dict) else None,
+        )
+
+    @property
+    def items(self) -> list[Tenant]:
+        return self.tenants
 
 
 @dataclass(frozen=True, slots=True)

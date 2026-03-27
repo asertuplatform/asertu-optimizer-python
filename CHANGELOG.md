@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 - 2026-03-27
+
+- adapta el SDK al OpenAPI `1.23.21`, incluyendo nuevas superficies `billing` y `settings`
+- incorpora telemetria opcional del propio SDK mediante `SdkTelemetryEvent` e `InMemoryTelemetryCollector`
+- amplia ejemplos end-to-end y documentacion de despliegue, operacion y hardening multi-tenant
+- actualiza el parseo de `tenants` al nuevo shape con `user` y `tenants`
+
 ## 1.2.0 - 2026-03-27
 
 - anade `AsyncAsertuOptimizerClient` y recursos async equivalentes para `events`, `tenants`, `analytics`, `history` y `pricing`

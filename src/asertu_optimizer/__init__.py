@@ -11,8 +11,9 @@ from .exceptions import (
     TransportError,
     ValidationError,
 )
+from .telemetry import InMemoryTelemetryCollector, SdkTelemetryEvent
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 __all__ = [
     "AsertuOptimizerClient",
@@ -26,5 +27,7 @@ __all__ = [
     "PermissionDeniedError",
     "TransportError",
     "ValidationError",
+    "InMemoryTelemetryCollector",
+    "SdkTelemetryEvent",
     "__version__",
 ]

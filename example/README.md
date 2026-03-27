@@ -8,6 +8,7 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 
 - [`playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/playground.py)
 - [`async_playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/async_playground.py)
+- [`workspace_billing_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/workspace_billing_workflow.py)
 
 ## Flujos actuales
 
@@ -17,6 +18,7 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 - `list-tenants`: lista tenants por JWT
 - `analytics-summary`: consulta resumen del dashboard
 - `history-daily-cost`: consulta coste historico
+- `workspace + billing`: flujo end-to-end de settings, billing y telemetria
 
 ## Variables de entorno
 
@@ -34,4 +36,5 @@ python3 example/playground.py track-openai-event
 python3 example/playground.py track-openai-response
 python3 example/playground.py analytics-summary --preset today
 python3 example/async_playground.py analytics-summary --preset today
+python3 example/workspace_billing_workflow.py
 ```

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .telemetry import TelemetryHandler
+
 DEFAULT_BASE_URL = "https://api.dev.asertu.ai"
 DEFAULT_TIMEOUT = 10.0
 DEFAULT_MAX_RETRIES = 2
-DEFAULT_USER_AGENT = "asertu-optimizer-python/1.2.0"
+DEFAULT_USER_AGENT = "asertu-optimizer-python/1.3.0"
 
 
 @dataclass(frozen=True, slots=True)
@@ -14,6 +16,7 @@ class ClientConfig:
     timeout: float = DEFAULT_TIMEOUT
     max_retries: int = DEFAULT_MAX_RETRIES
     user_agent: str = DEFAULT_USER_AGENT
+    telemetry_handler: TelemetryHandler | None = None
 
     def __post_init__(self) -> None:
         if self.timeout <= 0:

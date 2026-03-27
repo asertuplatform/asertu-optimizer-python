@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from time import perf_counter
 from typing import Any
 
 import httpx
@@ -14,6 +15,7 @@ from .exceptions import (
     PermissionDeniedError,
     TransportError,
 )
+from .telemetry import SdkTelemetryEvent
 
 JsonMapping = Mapping[str, Any]
 
@@ -61,6 +63,7 @@ class AsertuHttpClient:
         retries_remaining = self._config.max_retries if method.upper() == "GET" else 0
 
         while True:
+            started_at = perf_counter()
             try:
                 response = self._client.request(
                     method=method,
@@ -73,13 +76,55 @@ class AsertuHttpClient:
                 if retries_remaining > 0:
                     retries_remaining -= 1
                     continue
+                self._emit_telemetry(
+                    method=method,
+                    path=path,
+                    duration_ms=(perf_counter() - started_at) * 1000,
+                    success=False,
+                    status_code=None,
+                    error_type=type(exc).__name__,
+                )
                 raise TransportError(f"Request to {path} failed: {exc}") from exc
 
             if response.status_code >= 500 and retries_remaining > 0:
                 retries_remaining -= 1
                 continue
 
+            self._emit_telemetry(
+                method=method,
+                path=path,
+                duration_ms=(perf_counter() - started_at) * 1000,
+                success=200 <= response.status_code < 300,
+                status_code=response.status_code,
+                request_id=response.headers.get("x-request-id"),
+            )
+
             return self._handle_response(response)
+
+    def _emit_telemetry(
+        self,
+        *,
+        method: str,
+        path: str,
+        duration_ms: float,
+        success: bool,
+        status_code: int | None,
+        error_type: str | None = None,
+        request_id: str | None = None,
+    ) -> None:
+        if self._config.telemetry_handler is None:
+            return
+        self._config.telemetry_handler(
+            SdkTelemetryEvent(
+                method=method.upper(),
+                path=path,
+                status_code=status_code,
+                duration_ms=duration_ms,
+                success=success,
+                error_type=error_type,
+                request_id=request_id,
+            )
+        )
 
     @staticmethod
     def _handle_response(response: httpx.Response) -> JsonMapping:

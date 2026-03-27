@@ -7,6 +7,8 @@
 - `AsertuOptimizerClient.pricing`
 - `AsertuOptimizerClient.analytics`
 - `AsertuOptimizerClient.history`
+- `AsertuOptimizerClient.billing`
+- `AsertuOptimizerClient.settings`
 - `AsertuOptimizerClient.from_env()`
 - `AsyncAsertuOptimizerClient.*`
 
@@ -47,3 +49,18 @@
 - `daily_tokens(...)`
 - `cost_by_feature(...)`
 - `cost_by_model(...)`
+
+## Billing
+
+- `catalog(...)`
+- `start_checkout(...)`
+
+## Settings
+
+- `workspace(...)`
+- `create_access_request(...)`
+- `invitations(...)`
+- `invite_member(...)`
+- `manage_invitation(...)`
+- `decide_access_request(...)`
+- `manage_membership(...)`

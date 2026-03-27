@@ -7,13 +7,16 @@ import httpx
 from .async_http_client import AsyncAsertuHttpClient
 from .async_resources import (
     AsyncAnalyticsResource,
+    AsyncBillingResource,
     AsyncEventsResource,
     AsyncHistoryResource,
     AsyncPricingResource,
+    AsyncSettingsResource,
     AsyncTenantsResource,
 )
 from .auth import RequestAuth
 from .config import ClientConfig
+from .telemetry import TelemetryHandler
 
 
 class AsyncAsertuOptimizerClient:
@@ -37,12 +40,14 @@ class AsyncAsertuOptimizerClient:
         tenant_id: str | None = None,
         timeout: float = 10.0,
         max_retries: int = 2,
+        telemetry_handler: TelemetryHandler | None = None,
         http_client: httpx.AsyncClient | None = None,
     ) -> None:
         self.config = ClientConfig(
             base_url=base_url,
             timeout=timeout,
             max_retries=max_retries,
+            telemetry_handler=telemetry_handler,
         )
         self.auth = RequestAuth(
             admin_api_key=admin_api_key,
@@ -61,6 +66,8 @@ class AsyncAsertuOptimizerClient:
         self.events = AsyncEventsResource(self._http_client)
         self.analytics = AsyncAnalyticsResource(self._http_client)
         self.history = AsyncHistoryResource(self._http_client)
+        self.billing = AsyncBillingResource(self._http_client)
+        self.settings = AsyncSettingsResource(self._http_client)
 
     async def aclose(self) -> None:
         await self._http_client.aclose()

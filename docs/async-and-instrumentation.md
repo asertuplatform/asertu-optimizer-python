@@ -46,3 +46,16 @@ Helpers disponibles:
 ## Nota sobre paginacion
 
 La paginacion sigue pendiente porque el OpenAPI publicado hoy no expone ningun contrato paginado.
+
+## Telemetria del SDK
+
+```python
+from asertu_optimizer import AsertuOptimizerClient, InMemoryTelemetryCollector
+
+collector = InMemoryTelemetryCollector()
+client = AsertuOptimizerClient(
+    bearer_token="jwt-token",
+    tenant_id="tenant-123",
+    telemetry_handler=collector,
+)
+```

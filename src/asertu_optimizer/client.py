@@ -10,11 +10,14 @@ from .config import ClientConfig
 from .http_client import AsertuHttpClient
 from .resources import (
     AnalyticsResource,
+    BillingResource,
     EventsResource,
     HistoryResource,
     PricingResource,
+    SettingsResource,
     TenantsResource,
 )
+from .telemetry import TelemetryHandler
 
 
 class AsertuOptimizerClient:
@@ -38,12 +41,14 @@ class AsertuOptimizerClient:
         tenant_id: str | None = None,
         timeout: float = 10.0,
         max_retries: int = 2,
+        telemetry_handler: TelemetryHandler | None = None,
         http_client: httpx.Client | None = None,
     ) -> None:
         self.config = ClientConfig(
             base_url=base_url,
             timeout=timeout,
             max_retries=max_retries,
+            telemetry_handler=telemetry_handler,
         )
         self.auth = RequestAuth(
             admin_api_key=admin_api_key,
@@ -62,6 +67,8 @@ class AsertuOptimizerClient:
         self.events = EventsResource(self._http_client)
         self.analytics = AnalyticsResource(self._http_client)
         self.history = HistoryResource(self._http_client)
+        self.billing = BillingResource(self._http_client)
+        self.settings = SettingsResource(self._http_client)
 
     def close(self) -> None:
         self._http_client.close()
