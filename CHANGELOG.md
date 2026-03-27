@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.3 - 2026-03-27
+
+- corrige el `README` publicado en PyPI para usar enlaces web publicos en lugar de rutas locales
+- normaliza los enlaces internos de `docs/` y `example/` a referencias relativas aptas para GitHub
+- mantiene intacta la superficie del SDK y publica una patch release centrada en packaging y documentacion
+
 ## 2.0.2 - 2026-03-27
 
 - consolida la convención documental del repo con nombres canónicos para `README.md`, `CHANGELOG.md`, `MIGRATION.md` y `ROADMAP.md`

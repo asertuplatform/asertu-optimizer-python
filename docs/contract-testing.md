@@ -6,7 +6,7 @@ Detectar cambios del OpenAPI publicado antes de que rompan el SDK.
 
 ## Test live del contrato
 
-El test [`tests/test_openapi_contract.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/tests/test_openapi_contract.py) descarga el YAML publicado y valida:
+El test [`tests/test_openapi_contract.py`](../tests/test_openapi_contract.py) descarga el YAML publicado y valida:
 
 - version OpenAPI
 - endpoints esperados
@@ -29,7 +29,7 @@ ASERTU_RUN_LIVE_CONTRACT_TEST=1 python3 -m pytest tests/test_openapi_contract.py
 
 ## Smoke workflow
 
-El smoke workflow ejecuta [`scripts/smoke_check.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/scripts/smoke_check.py) con secrets de GitHub Actions para validar llamadas reales contra dev.
+El smoke workflow ejecuta [`scripts/smoke_check.py`](../scripts/smoke_check.py) con secrets de GitHub Actions para validar llamadas reales contra dev.
 
 Secrets esperados:
 

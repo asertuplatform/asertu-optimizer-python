@@ -72,8 +72,16 @@ Estado: completado
 
 ## 2.0.3
 
+Estado: completado
+
+- corregir la documentacion renderizada en PyPI para eliminar rutas locales del `README`
+- usar enlaces publicos en el `README` del paquete y enlaces relativos dentro del repo
+- cerrar una patch release de packaging sin cambios funcionales en la API del SDK
+
+## 2.0.4
+
 Estado: bloqueado por contrato
 
 - incorporar endpoints admin reales cuando el OpenAPI los publique
 - sustituir placeholders admin por integraciones definitivas
-- evaluar paginacion si entra en contrato
+- evaluar nuevas capacidades de paginacion si el contrato las extiende fuera de `tenants`

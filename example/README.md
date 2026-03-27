@@ -6,12 +6,12 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 
 ## Script principal
 
-- [`playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/playground.py)
-- [`async_playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/async_playground.py)
-- [`workspace_billing_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/workspace_billing_workflow.py)
-- [`openai_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/openai_workflow.py)
-- [`anthropic_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/anthropic_workflow.py)
-- [`bedrock_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/bedrock_workflow.py)
+- [`playground.py`](playground.py)
+- [`async_playground.py`](async_playground.py)
+- [`workspace_billing_workflow.py`](workspace_billing_workflow.py)
+- [`openai_workflow.py`](openai_workflow.py)
+- [`anthropic_workflow.py`](anthropic_workflow.py)
+- [`bedrock_workflow.py`](bedrock_workflow.py)
 
 ## Flujos actuales
 

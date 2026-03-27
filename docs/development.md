@@ -39,7 +39,7 @@ ASERTU_RUN_LIVE_CONTRACT_TEST=1 python3 -m pytest tests/test_openapi_contract.py
 
 ## Publicacion
 
-El workflow [`publish.yml`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/.github/workflows/publish.yml) sigue encargado de la publicacion a PyPI.
+El workflow [`publish.yml`](../.github/workflows/publish.yml) sigue encargado de la publicacion a PyPI.
 
 Comportamiento actual del workflow:
 
