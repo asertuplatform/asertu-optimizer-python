@@ -2,7 +2,7 @@
 
 SDK oficial de Python para asertu Optimizer, el producto de observabilidad, coste y optimizacion del uso de IA de la plataforma general [asertu](https://asertu.ai).
 
-Version actual estable: `3.0.1`
+Version actual estable: `1.0.0`
 
 Este repositorio contiene exclusivamente el SDK Python oficial del producto [asertu Optimizer](https://optimizer.asertu.ai). La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar asertu como un cliente REST generico.
 
@@ -27,29 +27,18 @@ La base del SDK ya incluye:
 - telemetria opcional del SDK
 - tests, ejemplo ejecutable y documentacion del repo
 
-## Estructura del repositorio
-
-- [`src/asertu_optimizer`](https://github.com/asertuplatform/asertu-optimizer-python/tree/main/src/asertu_optimizer): paquete del SDK
-- [`example`](https://github.com/asertuplatform/asertu-optimizer-python/tree/main/example): playground de ejemplo para probar flujos completos
-- [`docs`](https://github.com/asertuplatform/asertu-optimizer-python/tree/main/docs): documentacion funcional y tecnica
-- [`ROADMAP.md`](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/ROADMAP.md): siguientes pasos agrupados por version
-
 ## Documentacion
 
-- [Indice de documentacion](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/README.md)
-- [Getting Started](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/getting-started.md)
-- [Arquitectura del SDK](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/architecture.md)
-- [Autenticacion](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/authentication.md)
-- [Referencia de API](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/api-reference.md)
-- [Public API](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/public-api.md)
-- [Stability Policy](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/stability-policy.md)
-- [Async e instrumentacion](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/async-and-instrumentation.md)
-- [Provider Compatibility](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/provider-compatibility.md)
-- [Contract Testing](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/contract-testing.md)
-- [Deployment Patterns](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/deployment-patterns.md)
-- [Desarrollo y release](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/development.md)
-- [Migration](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/MIGRATION.md)
-- [Ejemplos](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/example/README.md)
+La documentacion funcional y de producto se referencia desde [optimizer.asertu.ai](https://optimizer.asertu.ai).
+
+En esta release publica inicial, el SDK se centra en:
+
+- ingesta de eventos de observabilidad de IA
+- discovery de tenants para usuarios autenticados
+- analytics, insights, recommendations e history tenant-scoped
+- billing y settings de workspace
+- helpers para OpenAI, Anthropic y Bedrock
+- soporte sync y async
 
 ## Instalacion
 
@@ -118,7 +107,7 @@ El SDK expone unicamente metodos respaldados por el Swagger/OpenAPI publicado. N
 
 ## Compatibilidad de proveedores
 
-La compatibilidad documental de los helpers de instrumentacion esta verificada a fecha `2026-03-27` en [Provider Compatibility](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/provider-compatibility.md).
+La compatibilidad documental de los helpers de instrumentacion esta verificada a fecha `2026-03-27` y se apoya en la documentacion oficial de cada proveedor.
 
 En este momento:
 

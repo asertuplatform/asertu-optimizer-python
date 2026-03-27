@@ -1,10 +1,16 @@
 # Changelog
 
-## 3.0.1 - 2026-03-27
+## 1.0.0 - 2026-03-27
 
+- establece la primera release publica estable del SDK oficial `asertu-optimizer` en PyPI
+- consolida la superficie contractualmente soportada para `events`, `tenants`, `analytics`, `history`, `billing` y `settings`
 - normaliza la documentacion y metadata publica para usar la marca `asertu` en minuscula fuera de identificadores tecnicos
 - actualiza la documentacion, ejemplos y defaults del SDK para referenciar URLs y nomenclatura de produccion
-- mantiene intacta la superficie funcional del SDK y publica una patch release centrada en branding, DX y consistencia publica
+- elimina enlaces publicos al repositorio desde la metadata de PyPI
+
+## Historial previo de desarrollo
+
+Las entradas siguientes reflejan iteraciones anteriores del SDK durante su construccion y estabilizacion antes de fijar la numeracion publica en `1.0.0`.
 
 ## 3.0.0 - 2026-03-27
 

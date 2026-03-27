@@ -7,7 +7,7 @@ from asertu_optimizer import AsertuOptimizerClient, AsyncAsertuOptimizerClient
 
 
 def test_version_is_stable_release() -> None:
-    assert asertu_optimizer.__version__ == "3.0.1"
+    assert asertu_optimizer.__version__ == "1.0.0"
 
 
 def test_top_level_exports_exist() -> None:
