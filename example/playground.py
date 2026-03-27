@@ -52,8 +52,12 @@ def track_openai_response(client: AsertuOptimizerClient, _: argparse.Namespace) 
     pprint(result)
 
 
-def list_tenants(client: AsertuOptimizerClient, _: argparse.Namespace) -> None:
-    pprint(client.tenants.list())
+def list_tenants_page(client: AsertuOptimizerClient, args: argparse.Namespace) -> None:
+    pprint(client.tenants.list(limit=args.limit, cursor=args.cursor))
+
+
+def list_all_tenants(client: AsertuOptimizerClient, args: argparse.Namespace) -> None:
+    pprint(list(client.tenants.iter_all(page_size=args.page_size)))
 
 
 def analytics_summary(client: AsertuOptimizerClient, args: argparse.Namespace) -> None:
@@ -84,7 +88,12 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("track-event")
     subparsers.add_parser("track-openai-event")
     subparsers.add_parser("track-openai-response")
-    subparsers.add_parser("list-tenants")
+    list_tenants_parser = subparsers.add_parser("list-tenants")
+    list_tenants_parser.add_argument("--limit", type=int)
+    list_tenants_parser.add_argument("--cursor")
+
+    list_all_tenants_parser = subparsers.add_parser("list-all-tenants")
+    list_all_tenants_parser.add_argument("--page-size", type=int, default=100)
 
     analytics_parser = subparsers.add_parser("analytics-summary")
     analytics_parser.add_argument("--preset", default="today")
@@ -109,7 +118,8 @@ def main() -> None:
         "track-event": track_event,
         "track-openai-event": track_openai_event,
         "track-openai-response": track_openai_response,
-        "list-tenants": list_tenants,
+        "list-tenants": list_tenants_page,
+        "list-all-tenants": list_all_tenants,
         "analytics-summary": analytics_summary,
         "history-daily-cost": history_daily_cost,
     }

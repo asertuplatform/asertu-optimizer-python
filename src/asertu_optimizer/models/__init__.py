@@ -31,6 +31,7 @@ from .settings import (
 )
 from .tenants import (
     AuthenticatedUser,
+    Pagination,
     Tenant,
     TenantCreateRequest,
     TenantCreateResult,
@@ -41,6 +42,7 @@ __all__ = [
     "InsightItem",
     "Insights",
     "AuthenticatedUser",
+    "Pagination",
     "BillingCatalog",
     "BillingCheckoutRequest",
     "BillingCheckoutResult",

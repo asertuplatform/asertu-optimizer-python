@@ -47,22 +47,56 @@ class AuthenticatedUser:
 
 
 @dataclass(frozen=True, slots=True)
+class Pagination:
+    limit: int | None = None
+    next_cursor: str | None = None
+    has_more: bool = False
+    total_items: int | None = None
+    missing_fields: list[str] = field(default_factory=list)
+    required_information: list[str] = field(default_factory=list)
+    error: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: JsonDict) -> Pagination:
+        return cls(
+            limit=data.get("limit"),
+            next_cursor=data.get("next_cursor"),
+            has_more=bool(data.get("has_more")),
+            total_items=data.get("total_items"),
+            missing_fields=list(data.get("missing_fields") or []),
+            required_information=list(data.get("required_information") or []),
+            error=data.get("error"),
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class TenantList:
     tenants: list[Tenant] = field(default_factory=list)
     user: AuthenticatedUser | None = None
+    pagination: Pagination | None = None
 
     @classmethod
     def from_dict(cls, data: JsonDict) -> TenantList:
         raw_items = data.get("tenants", data.get("items", [])) or []
         user = data.get("user")
+        pagination = data.get("pagination")
         return cls(
             tenants=[Tenant.from_dict(item) for item in raw_items],
             user=AuthenticatedUser.from_dict(user) if isinstance(user, dict) else None,
+            pagination=Pagination.from_dict(pagination) if isinstance(pagination, dict) else None,
         )
 
     @property
     def items(self) -> list[Tenant]:
         return self.tenants
+
+    @property
+    def next_cursor(self) -> str | None:
+        return self.pagination.next_cursor if self.pagination is not None else None
+
+    @property
+    def has_more(self) -> bool:
+        return self.pagination.has_more if self.pagination is not None else False
 
 
 @dataclass(frozen=True, slots=True)

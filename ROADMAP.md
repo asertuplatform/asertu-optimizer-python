@@ -67,6 +67,8 @@ Estado: completado
 - consolidar la convencion documental: `README.md` para documentos canonicos e `lowercase-kebab-case` para docs tematicos
 - actualizar enlaces internos, packaging y puntos de entrada documentales segun esa convencion
 - endurecer el workflow de publicacion con validacion tag-version y ruta manual segura a TestPyPI
+- adaptar `tenants` a la paginacion oficial introducida por el contrato OpenAPI `1.23.23`
+- anadir iteradores sync y async para recorrer todas las paginas de tenants
 
 ## 2.0.3
 

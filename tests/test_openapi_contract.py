@@ -38,11 +38,19 @@ def test_openapi_contract_version_and_paths() -> None:
     paths = cast(dict[str, Any], contract["paths"])
 
     assert contract["openapi"] == "3.0.3"
-    assert info["version"] == "1.23.21"
+    assert info["version"] == "1.23.23"
     assert "/v1/events" in paths
     assert "/v1/tenants" in paths
     assert "/v1/settings/workspace" in paths
     assert "/v1/billing/catalog" in paths
+    tenant_parameters = cast(list[dict[str, Any]], paths["/v1/tenants"]["get"]["parameters"])
+    components = cast(dict[str, Any], contract["components"])
+    component_parameters = cast(dict[str, Any], components["parameters"])
+    parameter_names = [
+        cast(dict[str, Any], component_parameters[item["$ref"].split("/")[-1]])["name"]
+        for item in tenant_parameters
+    ]
+    assert parameter_names == ["limit", "cursor"]
 
 
 def test_openapi_contract_exposes_expected_schemas() -> None:
@@ -55,8 +63,11 @@ def test_openapi_contract_exposes_expected_schemas() -> None:
     tenant_properties = cast(dict[str, Any], tenant_schema["properties"])
 
     assert "TenantsResponse" in schemas
+    assert "Pagination" in schemas
     assert "WorkspaceSettingsResponse" in schemas
     assert "BillingCatalogResponse" in schemas
 
     assert "plan_id" in tenant_properties
     assert "subscription_status" in tenant_properties
+    response_properties = cast(dict[str, Any], schemas["TenantsResponse"]["properties"])
+    assert "pagination" in response_properties

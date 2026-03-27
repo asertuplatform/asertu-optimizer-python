@@ -2,7 +2,7 @@
 
 SDK oficial de Python para Asertu Optimizer, una plataforma SaaS multi-tenant para observabilidad, coste y optimizacion del uso de IA.
 
-Version actual estable: `2.0.1`
+Version actual estable: `2.0.2`
 
 Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar Asertu como un cliente REST generico.
 
@@ -14,6 +14,7 @@ La base del SDK ya incluye:
 - auth por `admin_api_key`, `tenant_api_key`, `bearer_token` y `tenant_id`
 - eventos de observabilidad LLM
 - tenants
+- paginacion de tenants con `limit`, `cursor` e iteracion completa
 - analytics
 - history
 - billing
@@ -100,6 +101,8 @@ await async_client.aclose()
 
 ## Contrato actual
 
-El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato publicado sube a `version: 1.23.21` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
+El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato publicado sube a `version: 1.23.23` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
+
+El endpoint `GET /v1/tenants` ahora expone paginacion oficial con `limit` y `cursor`, y el SDK lo cubre con `client.tenants.list(limit=..., cursor=...)` e `iter_all()` tanto en sync como en async.
 
 Los endpoints admin para crear tenant y hacer upsert de pricing todavia no aparecen en el contrato OpenAPI publicado. Por eso el SDK expone esas superficies, pero hoy responden con una excepcion explicita `ContractUnavailableError` en vez de adivinar rutas no oficiales.

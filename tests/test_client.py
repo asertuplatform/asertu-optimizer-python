@@ -126,6 +126,84 @@ def test_tenants_list_uses_bearer_auth() -> None:
     assert result.user.email == "dev@asertu.ai"
 
 
+def test_tenants_list_supports_pagination_parameters() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.params["limit"] == "25"
+        assert request.url.params["cursor"] == "cursor-1"
+        return httpx.Response(
+            200,
+            json={
+                "user": {"sub": "user-1", "email": "dev@asertu.ai"},
+                "tenants": [{"tenant_id": "tenant-1", "name": "Acme"}],
+                "pagination": {
+                    "limit": 25,
+                    "next_cursor": "cursor-2",
+                    "has_more": True,
+                    "total_items": 80,
+                },
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    result = client.tenants.list(limit=25, cursor="cursor-1")
+
+    assert result.pagination is not None
+    assert result.pagination.limit == 25
+    assert result.next_cursor == "cursor-2"
+    assert result.has_more is True
+
+
+def test_tenants_iter_all_pages_until_exhausted() -> None:
+    seen_cursors: list[str | None] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        cursor = request.url.params.get("cursor")
+        seen_cursors.append(cursor)
+        if cursor is None:
+            return httpx.Response(
+                200,
+                json={
+                    "tenants": [{"tenant_id": "tenant-1", "name": "Acme"}],
+                    "pagination": {
+                        "limit": 1,
+                        "next_cursor": "cursor-2",
+                        "has_more": True,
+                    },
+                },
+            )
+        return httpx.Response(
+            200,
+            json={
+                "tenants": [{"tenant_id": "tenant-2", "name": "Beta"}],
+                "pagination": {
+                    "limit": 1,
+                    "next_cursor": None,
+                    "has_more": False,
+                },
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    items = list(client.tenants.iter_all(page_size=1))
+
+    assert [item.tenant_id for item in items] == ["tenant-1", "tenant-2"]
+    assert seen_cursors == [None, "cursor-2"]
+
+
 def test_auth_override_per_call() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.headers["Authorization"] == "Bearer override-token"
@@ -175,6 +253,16 @@ def test_requires_bearer_token_for_tenants_list() -> None:
 
     with pytest.raises(MissingCredentialsError):
         client.tenants.list()
+
+
+def test_validates_tenants_pagination_inputs() -> None:
+    client = AsertuOptimizerClient(bearer_token="jwt-token")
+
+    with pytest.raises(ValidationError):
+        client.tenants.list(limit=0)
+
+    with pytest.raises(ValidationError):
+        client.tenants.list(cursor="   ")
 
 
 def test_requires_tenant_scope_for_analytics_reads() -> None:
@@ -443,6 +531,57 @@ def test_async_dashboard_summary() -> None:
 
         assert result.total_requests == 7
         assert result.total_cost == 1.23
+
+    asyncio.run(run())
+
+
+def test_async_tenants_iter_all_pages_until_exhausted() -> None:
+    async def run() -> None:
+        seen_cursors: list[str | None] = []
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            cursor = request.url.params.get("cursor")
+            seen_cursors.append(cursor)
+            if cursor is None:
+                return httpx.Response(
+                    200,
+                    json={
+                        "tenants": [{"tenant_id": "tenant-1", "name": "Acme"}],
+                        "pagination": {
+                            "limit": 1,
+                            "next_cursor": "cursor-2",
+                            "has_more": True,
+                        },
+                    },
+                )
+            return httpx.Response(
+                200,
+                json={
+                    "tenants": [{"tenant_id": "tenant-2", "name": "Beta"}],
+                    "pagination": {
+                        "limit": 1,
+                        "next_cursor": None,
+                        "has_more": False,
+                    },
+                },
+            )
+
+        client = AsyncAsertuOptimizerClient(
+            bearer_token="jwt-token",
+            http_client=httpx.AsyncClient(
+                base_url="https://api.dev.asertu.ai",
+                transport=httpx.MockTransport(handler),
+            ),
+        )
+        try:
+            collected = []
+            async for item in client.tenants.iter_all(page_size=1):
+                collected.append(item.tenant_id)
+        finally:
+            await client.aclose()
+
+        assert collected == ["tenant-1", "tenant-2"]
+        assert seen_cursors == [None, "cursor-2"]
 
     asyncio.run(run())
 

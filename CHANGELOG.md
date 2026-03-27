@@ -6,6 +6,8 @@
 - endurece el workflow de publicación con validación entre tag y versión del paquete
 - separa la publicación automática a PyPI de la validación manual en TestPyPI
 - documenta las precondiciones de Trusted Publisher y el proceso operativo de release
+- adapta el SDK al OpenAPI `1.23.23` incorporando paginacion oficial para `tenants`
+- añade `pagination`, `limit`, `cursor` e iteradores `iter_all()` para tenants en sync y async
 
 ## 2.0.1 - 2026-03-27
 
