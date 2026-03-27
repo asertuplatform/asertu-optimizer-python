@@ -13,7 +13,7 @@ from .exceptions import (
 )
 from .telemetry import InMemoryTelemetryCollector, SdkTelemetryEvent
 
-__version__ = "1.3.0"
+__version__ = "2.0.0"
 
 __all__ = [
     "AsertuOptimizerClient",

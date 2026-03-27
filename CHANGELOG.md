@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0 - 2026-03-27
+
+- declara estable la superficie publica del SDK sobre el contrato OpenAPI publicado actual
+- anade `py.typed`, tests de compatibilidad de API publica y documentacion de migracion/estabilidad
+- consolida `events`, `tenants`, `pricing`, `analytics`, `history`, `billing` y `settings` como recursos estables
+- mantiene los placeholders admin protegidos por `ContractUnavailableError` hasta que el contrato oficial los publique
+
 ## 1.3.0 - 2026-03-27
 
 - adapta el SDK al OpenAPI `1.23.21`, incluyendo nuevas superficies `billing` y `settings`

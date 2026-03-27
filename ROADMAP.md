@@ -45,6 +45,16 @@ Estado: completado
 
 ## 2.0.0
 
+Estado: completado
+
 - consolidar una superficie estable para observabilidad de IA en produccion
 - revisar naming y compatibilidad de metodos antes de declarar estabilidad mayor
-- alinear completamente el SDK con el contrato admin y futuras capacidades del producto
+- alinear completamente con el contrato publicado actual
+
+## 2.0.1
+
+Estado: bloqueado por contrato
+
+- incorporar endpoints admin reales cuando el OpenAPI los publique
+- sustituir placeholders admin por integraciones definitivas
+- evaluar paginacion si entra en contrato
