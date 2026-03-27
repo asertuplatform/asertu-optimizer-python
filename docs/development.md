@@ -68,3 +68,41 @@ Para validar antes en TestPyPI:
 1. ejecuta el workflow `Publish Python package` manualmente
 2. deja `repository=testpypi`
 3. revisa que la subida termine bien antes de la release final
+
+## Release checklist
+
+Checklist recomendada para cada nueva release publica a partir de `1.0.1`:
+
+1. revisar el Swagger/OpenAPI publicado y confirmar si hay cambios contractuales reales
+2. actualizar el SDK solo sobre endpoints y shapes presentes en el contrato publicado
+3. revisar `README.md`, `CHANGELOG.md` y `ROADMAP.md`
+4. actualizar la version en `pyproject.toml`, `src/asertu_optimizer/__init__.py` y, si aplica, `src/asertu_optimizer/config.py`
+5. ejecutar:
+
+```bash
+python3 -m ruff check .
+python3 -m mypy .
+python3 -m pytest
+python3 -m build
+python3 -m twine check dist/*
+```
+
+6. comprobar que la metadata publica no expone enlaces no deseados en PyPI
+7. hacer commit y push a `main`
+8. crear y subir el tag `vX.Y.Z`
+9. publicar la GitHub Release para disparar el workflow de PyPI
+10. verificar en PyPI la version visible, los artefactos y los `Project links`
+
+## Estado publico actual
+
+Linea publica vigente:
+
+- version visible en PyPI: `1.0.0`
+- release GitHub visible: `v1.0.0`
+- tags visibles remotos: `v1.0.0`
+
+Convenciones actuales:
+
+- solo se publican metodos respaldados por el Swagger/OpenAPI publicado
+- la metadata publica del paquete solo apunta a `https://asertu.ai` y `https://optimizer.asertu.ai`
+- el branding documental usa `asertu` en minuscula salvo identificadores tecnicos de Python
