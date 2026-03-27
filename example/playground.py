@@ -82,7 +82,7 @@ def history_daily_cost(client: AsertuOptimizerClient, args: argparse.Namespace) 
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Asertu Optimizer SDK playground")
+    parser = argparse.ArgumentParser(description="asertu Optimizer SDK playground")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("track-event")

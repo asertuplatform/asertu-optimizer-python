@@ -11,7 +11,7 @@ Para lecturas tenant-scoped, el contrato actual requiere JWT y tambien `X-Tenant
 
 ```python
 client = AsertuOptimizerClient(
-    base_url="https://api.dev.asertu.ai",
+    base_url="https://api.asertu.ai",
     tenant_api_key="tenant-key",
 )
 ```
@@ -20,7 +20,7 @@ client = AsertuOptimizerClient(
 
 ```python
 client = AsertuOptimizerClient(
-    base_url="https://api.dev.asertu.ai",
+    base_url="https://api.asertu.ai",
     bearer_token="jwt-token",
     tenant_id="tenant-123",
 )

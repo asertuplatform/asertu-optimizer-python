@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "asertu-optimizer"
-version = "3.0.0"
-description = "Official Python SDK for Asertu Optimizer AI observability."
+version = "3.0.1"
+description = "Official Python SDK for asertu optimizer AI observability."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-  { name = "Asertu", email = "dev@asertu.ai" }
+  { name = "asertu", email = "dev@asertu.ai" }
 ]
 keywords = [
   "asertu",
@@ -53,7 +53,7 @@ dev = [
 [project.urls]
 Homepage = "https://asertu.ai"
 Repository = "https://github.com/asertuplatform/asertu-optimizer-python"
-Documentation = "https://optimizer.dev.asertu.ai/swagger/index.html"
+Documentation = "https://optimizer.asertu.ai"
 Issues = "https://github.com/asertuplatform/asertu-optimizer-python/issues"
 
 [tool.hatch.build.targets.wheel]

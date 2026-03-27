@@ -1,10 +1,10 @@
-# Asertu Optimizer Python SDK
+# asertu Optimizer Python SDK
 
-SDK oficial de Python para Asertu Optimizer, una plataforma SaaS multi-tenant para observabilidad, coste y optimizacion del uso de IA.
+SDK oficial de Python para asertu Optimizer, el producto de observabilidad, coste y optimizacion del uso de IA de la plataforma general [asertu](https://asertu.ai).
 
-Version actual estable: `3.0.0`
+Version actual estable: `3.0.1`
 
-Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar Asertu como un cliente REST generico.
+Este repositorio contiene exclusivamente el SDK Python oficial del producto [asertu Optimizer](https://optimizer.asertu.ai). La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar asertu como un cliente REST generico.
 
 ## Estado actual
 
@@ -83,7 +83,7 @@ Para consultas tenant-scoped:
 
 ```python
 client = AsertuOptimizerClient(
-    base_url="https://api.dev.asertu.ai",
+    base_url="https://api.asertu.ai",
     bearer_token="jwt-token",
     tenant_id="tenant-123",
 )
@@ -103,7 +103,7 @@ await async_client.aclose()
 
 ## Contrato actual
 
-El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato publicado sube a `version: 1.23.23` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
+El SDK toma como fuente de verdad el Swagger publicado del producto en [optimizer.asertu.ai](https://optimizer.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato publicado sube a `version: 1.23.23` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
 
 Los endpoints paginables publicados hoy son:
 

@@ -14,7 +14,7 @@
 
 - un cliente singleton con `tenant_api_key`
 - envio de eventos despues de cada llamada LLM
-- fallback seguro si Asertu no responde
+- fallback seguro si asertu no responde
 
 ### Backend for frontend
 

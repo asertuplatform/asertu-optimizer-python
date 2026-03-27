@@ -8,7 +8,7 @@ from asertu_optimizer import AsyncAsertuOptimizerClient
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Asertu Optimizer async playground")
+    parser = argparse.ArgumentParser(description="asertu Optimizer async playground")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     summary_parser = subparsers.add_parser("analytics-summary")

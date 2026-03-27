@@ -14,7 +14,7 @@ from .async_resources import (
     AsyncTenantsResource,
 )
 from .auth import RequestAuth
-from .config import ClientConfig
+from .config import DEFAULT_BASE_URL, ClientConfig
 from .telemetry import TelemetryHandler
 
 
@@ -22,7 +22,7 @@ class AsyncAsertuOptimizerClient:
     @classmethod
     def from_env(cls) -> AsyncAsertuOptimizerClient:
         return cls(
-            base_url=os.getenv("ASERTU_BASE_URL", "https://api.dev.asertu.ai"),
+            base_url=os.getenv("ASERTU_BASE_URL", DEFAULT_BASE_URL),
             tenant_api_key=os.getenv("ASERTU_TENANT_API_KEY"),
             bearer_token=os.getenv("ASERTU_BEARER_TOKEN"),
             tenant_id=os.getenv("ASERTU_TENANT_ID"),
@@ -31,7 +31,7 @@ class AsyncAsertuOptimizerClient:
     def __init__(
         self,
         *,
-        base_url: str = "https://api.dev.asertu.ai",
+        base_url: str = DEFAULT_BASE_URL,
         tenant_api_key: str | None = None,
         bearer_token: str | None = None,
         tenant_id: str | None = None,

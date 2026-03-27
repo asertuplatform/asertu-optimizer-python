@@ -8,7 +8,7 @@ from asertu_optimizer import AsertuOptimizerClient, InMemoryTelemetryCollector
 def main() -> None:
     telemetry = InMemoryTelemetryCollector()
     client = AsertuOptimizerClient(
-        base_url="https://api.dev.asertu.ai",
+        base_url="https://api.asertu.ai",
         bearer_token="jwt-token",
         tenant_id="tenant-123",
         telemetry_handler=telemetry,

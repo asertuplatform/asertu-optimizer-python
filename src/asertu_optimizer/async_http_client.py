@@ -136,7 +136,7 @@ class AsyncAsertuHttpClient:
         if 200 <= response.status_code < 300:
             return data
 
-        message = data.get("message", "Asertu Optimizer API request failed")
+        message = data.get("message", "asertu Optimizer API request failed")
         if response.status_code == 400:
             raise BadRequestError(message, status_code=response.status_code, response_body=data)
         if response.status_code == 401:

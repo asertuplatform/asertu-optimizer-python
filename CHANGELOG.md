@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.1 - 2026-03-27
+
+- normaliza la documentacion y metadata publica para usar la marca `asertu` en minuscula fuera de identificadores tecnicos
+- actualiza la documentacion, ejemplos y defaults del SDK para referenciar URLs y nomenclatura de produccion
+- mantiene intacta la superficie funcional del SDK y publica una patch release centrada en branding, DX y consistencia publica
+
 ## 3.0.0 - 2026-03-27
 
 - documenta explicitamente la compatibilidad verificada con OpenAI, Anthropic y AWS Bedrock

@@ -103,8 +103,16 @@ Estado: completado
 
 ## 3.0.1
 
-Estado: pendiente
+Estado: completado
 
 - seguir vigilando el Swagger para detectar cambios contractuales reales
 - ampliar compatibilidad de proveedores solo cuando la documentacion oficial y los shapes observados lo justifiquen
 - reforzar ejemplos end-to-end con los flujos tenant/workspace que ya existen en la API
+
+## 3.0.2
+
+Estado: pendiente
+
+- endurecer tests de contrato por endpoint para detectar cambios de schema con mas granularidad
+- ampliar smoke tests y ejemplos operativos sobre flujos tenant/workspace reales del producto
+- seguir ajustando compatibilidad de proveedores unicamente cuando la documentacion oficial y los shapes publicados lo sostengan

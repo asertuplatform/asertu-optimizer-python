@@ -28,7 +28,6 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 ## Variables de entorno
 
 - `ASERTU_BASE_URL`
-- `ASERTU_ADMIN_API_KEY`
 - `ASERTU_TENANT_API_KEY`
 - `ASERTU_BEARER_TOKEN`
 - `ASERTU_TENANT_ID`
