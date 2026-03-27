@@ -7,7 +7,7 @@ from .telemetry import TelemetryHandler
 DEFAULT_BASE_URL = "https://api.asertu.ai"
 DEFAULT_TIMEOUT = 10.0
 DEFAULT_MAX_RETRIES = 2
-DEFAULT_USER_AGENT = "asertu-optimizer-python/1.0.0"
+DEFAULT_USER_AGENT = "asertu-optimizer-python/1.0.1"
 
 
 @dataclass(frozen=True, slots=True)

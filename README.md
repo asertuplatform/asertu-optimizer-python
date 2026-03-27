@@ -2,7 +2,7 @@
 
 SDK oficial de Python para asertu Optimizer, el producto de observabilidad, coste y optimizacion del uso de IA de la plataforma general [asertu](https://asertu.ai).
 
-Version actual estable: `1.0.0`
+Version actual estable: `1.0.1`
 
 Este repositorio contiene exclusivamente el SDK Python oficial del producto [asertu Optimizer](https://optimizer.asertu.ai). La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar asertu como un cliente REST generico.
 
@@ -30,6 +30,13 @@ La base del SDK ya incluye:
 ## Documentacion
 
 La documentacion funcional y de producto se referencia desde [optimizer.asertu.ai](https://optimizer.asertu.ai).
+
+Tambien puedes navegar el material tecnico directamente en el repositorio oficial:
+
+- [Repositorio del SDK](https://github.com/asertuplatform/asertu-optimizer-python)
+- [Indice de documentacion](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/README.md)
+- [Ejemplos](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/example/README.md)
+- [Roadmap](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/ROADMAP.md)
 
 En esta release publica inicial, el SDK se centra en:
 

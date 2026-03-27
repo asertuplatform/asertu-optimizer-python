@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 - 2026-03-27
+
+- restaura enlaces publicos al repositorio, ejemplos y documentacion tecnica desde la metadata del paquete y el `README`
+- mantiene la superficie funcional del SDK sin cambios y publica una patch release centrada en discoverability
+
 ## 1.0.0 - 2026-03-27
 
 - establece la primera release publica estable del SDK oficial `asertu-optimizer` en PyPI
