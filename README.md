@@ -1,28 +1,40 @@
 # Asertu Optimizer Python SDK
 
-SDK oficial de Python para Asertu Optimizer, orientado a observabilidad y optimizacion del uso de IA en aplicaciones reales.
+SDK oficial de Python para Asertu Optimizer, una plataforma SaaS multi-tenant para observabilidad, coste y optimizacion del uso de IA.
 
-No es un cliente REST generico. La API del SDK esta pensada para integrarse de forma natural en flujos con OpenAI, Anthropic o Bedrock, con helpers para registrar llamadas LLM sin construir payloads complejos a mano.
+Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar Asertu como un cliente REST generico.
 
-## Estado del repo
+## Estado actual
 
-Esta Fase 1 implementa:
+La base del SDK ya incluye:
 
-- paquete publicable con `src/asertu_optimizer`
-- cliente base con `httpx`
-- autenticacion por `admin_api_key`, `tenant_api_key` y `bearer_token`
-- capa HTTP reutilizable con timeout y retries basicos
-- recursos iniciales: `tenants`, `pricing`, `events`
-- modelos tipados con `dataclasses`
-- tests y ejemplos
+- cliente oficial `AsertuOptimizerClient`
+- auth por `admin_api_key`, `tenant_api_key`, `bearer_token` y `tenant_id`
+- eventos de observabilidad LLM
+- tenants
+- analytics
+- history
+- insights y recommendations
+- helpers para OpenAI, Anthropic y Bedrock
+- constructor `AsertuOptimizerClient.from_env()`
+- tests, ejemplo ejecutable y documentacion del repo
 
-El contrato OpenAPI publicado actualmente cubre con certeza:
+## Estructura del repositorio
 
-- `POST /v1/events`
-- `GET /v1/tenants`
-- endpoints de analytics, insights, recommendations e history
+- [`src/asertu_optimizer`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/src/asertu_optimizer): paquete del SDK
+- [`example`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example): playground de ejemplo para probar flujos completos
+- [`docs`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs): documentacion funcional y tecnica
+- [`ROADMAP.md`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/ROADMAP.md): siguientes pasos agrupados por version
 
-Los endpoints admin para crear tenant y hacer upsert de pricing no aparecen en el contrato publicado de `https://optimizer.dev.asertu.ai/swagger/index.html`. En esta fase el SDK expone esos recursos, pero devuelve una excepcion explicita hasta que exista contrato oficial.
+## Documentacion
+
+- [Indice de documentacion](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/README.md)
+- [Getting Started](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/getting-started.md)
+- [Arquitectura del SDK](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/architecture.md)
+- [Autenticacion](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/authentication.md)
+- [Referencia de API](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/api-reference.md)
+- [Desarrollo y release](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/development.md)
+- [Ejemplos](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/README.md)
 
 ## Instalacion
 
@@ -38,78 +50,34 @@ python3 -m pip install -e ".[dev]"
 
 ## Uso rapido
 
-### Ingesta de eventos LLM
-
 ```python
 from asertu_optimizer import AsertuOptimizerClient
 
-client = AsertuOptimizerClient(
-    base_url="https://api.dev.asertu.ai",
-    tenant_api_key="tenant-key",
-)
+client = AsertuOptimizerClient.from_env()
 
-result = client.events.track_llm_call(
-    provider="openai",
+client.events.track_openai_call(
     model="gpt-4.1-mini",
     feature="support_chat",
     input_tokens=1200,
     output_tokens=800,
     status="success",
-    user_id="user-123",
-    metadata={"environment": "dev"},
 )
-
-print(result.tenant_id)
 ```
 
-### Listado de tenants con JWT
+Para consultas tenant-scoped:
 
 ```python
-from asertu_optimizer import AsertuOptimizerClient
-
 client = AsertuOptimizerClient(
     base_url="https://api.dev.asertu.ai",
     bearer_token="jwt-token",
+    tenant_id="tenant-123",
 )
 
-tenants = client.tenants.list()
-for tenant in tenants.items:
-    print(tenant.name, tenant.role)
+summary = client.analytics.dashboard_summary(preset="today")
 ```
 
-### Override de autenticacion por llamada
+## Contrato actual
 
-```python
-summary_client = AsertuOptimizerClient(
-    base_url="https://api.dev.asertu.ai",
-    bearer_token="default-jwt",
-)
+El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). En el contrato actual ya aparecen `events`, `tenants`, `analytics`, `insights`, `recommendations` e `history`.
 
-tenants = summary_client.tenants.list(bearer_token="another-jwt")
-```
-
-## Diseno de la API
-
-La superficie principal del SDK es:
-
-```python
-from asertu_optimizer import AsertuOptimizerClient
-
-client = AsertuOptimizerClient(
-    base_url="https://api.dev.asertu.ai",
-    admin_api_key="admin-key",
-)
-
-client.events.track_llm_call(...)
-client.tenants.list(...)
-client.tenants.create(...)   # pendiente de contrato oficial
-client.pricing.upsert(...)   # pendiente de contrato oficial
-```
-
-## Desarrollo
-
-```bash
-ruff check .
-mypy .
-pytest
-```
+Los endpoints admin para crear tenant y hacer upsert de pricing todavia no aparecen en el contrato OpenAPI publicado. Por eso el SDK expone esas superficies, pero hoy responden con una excepcion explicita `ContractUnavailableError` en vez de adivinar rutas no oficiales.

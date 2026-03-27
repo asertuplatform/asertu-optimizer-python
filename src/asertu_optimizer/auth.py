@@ -30,3 +30,11 @@ class RequestAuth:
         if self.tenant_id:
             headers["X-Tenant-Id"] = self.tenant_id
         return headers
+
+    @property
+    def has_api_key(self) -> bool:
+        return bool(self.tenant_api_key or self.admin_api_key)
+
+    @property
+    def has_bearer_token(self) -> bool:
+        return bool(self.bearer_token)

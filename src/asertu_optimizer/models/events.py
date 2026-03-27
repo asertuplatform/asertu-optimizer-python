@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
+from ..exceptions import ValidationError
+
 JsonDict = dict[str, Any]
 
 
@@ -33,10 +35,45 @@ class EventIngestionRequest:
     cost: float | None = None
     metadata: JsonDict = field(default_factory=dict)
 
+    def __post_init__(self) -> None:
+        required_fields: dict[str, str] = {
+            "provider": self.provider,
+            "model": self.model,
+            "feature": self.feature,
+            "status": self.status,
+            "event_type": self.event_type,
+            "request_id": self.request_id,
+        }
+        for field_name, value in required_fields.items():
+            if not value or not value.strip():
+                raise ValidationError(f"{field_name} must be a non-empty string.")
+
+        token_values: dict[str, int | None] = {
+            "prompt_tokens": self.prompt_tokens,
+            "completion_tokens": self.completion_tokens,
+            "total_tokens": self.total_tokens,
+        }
+        for token_field_name, token_value in token_values.items():
+            if token_value is not None and token_value < 0:
+                raise ValidationError(f"{token_field_name} cannot be negative.")
+
+        if self.cost is not None and self.cost < 0:
+            raise ValidationError("cost cannot be negative.")
+
     def to_payload(self) -> JsonDict:
         total_tokens = self.total_tokens
         if total_tokens is None and None not in (self.prompt_tokens, self.completion_tokens):
             total_tokens = (self.prompt_tokens or 0) + (self.completion_tokens or 0)
+        elif (
+            total_tokens is not None
+            and self.prompt_tokens is not None
+            and self.completion_tokens is not None
+            and total_tokens != self.prompt_tokens + self.completion_tokens
+        ):
+            raise ValidationError(
+                "total_tokens must equal prompt_tokens + completion_tokens "
+                "when all values are provided."
+            )
 
         payload: JsonDict = {
             "schema_version": self.schema_version,

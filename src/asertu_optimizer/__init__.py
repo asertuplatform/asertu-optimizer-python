@@ -5,9 +5,13 @@ from .exceptions import (
     AuthenticationError,
     BadRequestError,
     ContractUnavailableError,
+    MissingCredentialsError,
     PermissionDeniedError,
     TransportError,
+    ValidationError,
 )
+
+__version__ = "1.1.1"
 
 __all__ = [
     "AsertuOptimizerClient",
@@ -16,6 +20,9 @@ __all__ = [
     "AuthenticationError",
     "BadRequestError",
     "ContractUnavailableError",
+    "MissingCredentialsError",
     "PermissionDeniedError",
     "TransportError",
+    "ValidationError",
+    "__version__",
 ]

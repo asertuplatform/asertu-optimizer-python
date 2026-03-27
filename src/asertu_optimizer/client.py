@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 import httpx
@@ -7,10 +8,26 @@ import httpx
 from .auth import RequestAuth
 from .config import ClientConfig
 from .http_client import AsertuHttpClient
-from .resources import EventsResource, PricingResource, TenantsResource
+from .resources import (
+    AnalyticsResource,
+    EventsResource,
+    HistoryResource,
+    PricingResource,
+    TenantsResource,
+)
 
 
 class AsertuOptimizerClient:
+    @classmethod
+    def from_env(cls) -> AsertuOptimizerClient:
+        return cls(
+            base_url=os.getenv("ASERTU_BASE_URL", "https://api.dev.asertu.ai"),
+            admin_api_key=os.getenv("ASERTU_ADMIN_API_KEY"),
+            tenant_api_key=os.getenv("ASERTU_TENANT_API_KEY"),
+            bearer_token=os.getenv("ASERTU_BEARER_TOKEN"),
+            tenant_id=os.getenv("ASERTU_TENANT_ID"),
+        )
+
     def __init__(
         self,
         *,
@@ -43,6 +60,8 @@ class AsertuOptimizerClient:
         self.tenants = TenantsResource(self._http_client)
         self.pricing = PricingResource(self._http_client)
         self.events = EventsResource(self._http_client)
+        self.analytics = AnalyticsResource(self._http_client)
+        self.history = HistoryResource(self._http_client)
 
     def close(self) -> None:
         self._http_client.close()

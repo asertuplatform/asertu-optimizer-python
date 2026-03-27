@@ -5,7 +5,7 @@ from dataclasses import dataclass
 DEFAULT_BASE_URL = "https://api.dev.asertu.ai"
 DEFAULT_TIMEOUT = 10.0
 DEFAULT_MAX_RETRIES = 2
-DEFAULT_USER_AGENT = "asertu-optimizer-python/0.1.0"
+DEFAULT_USER_AGENT = "asertu-optimizer-python/1.1.1"
 
 
 @dataclass(frozen=True, slots=True)

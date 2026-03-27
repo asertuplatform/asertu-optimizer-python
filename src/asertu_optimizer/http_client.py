@@ -39,6 +39,10 @@ class AsertuHttpClient:
         )
         self._owns_client = client is None
 
+    @property
+    def default_auth(self) -> RequestAuth:
+        return self._auth
+
     def close(self) -> None:
         if self._owns_client:
             self._client.close()

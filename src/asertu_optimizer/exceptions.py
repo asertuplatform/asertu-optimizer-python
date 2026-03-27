@@ -38,3 +38,11 @@ class PermissionDeniedError(ApiError):
 
 class ContractUnavailableError(AsertuOptimizerError):
     """Raised when the desired capability is not published in the current API contract."""
+
+
+class ValidationError(AsertuOptimizerError):
+    """Raised when SDK inputs are invalid before sending the request."""
+
+
+class MissingCredentialsError(ValidationError):
+    """Raised when a resource method is called without the required credentials."""

@@ -15,12 +15,14 @@ class EventsResource(BaseResource):
         *,
         tenant_api_key: str | None = None,
     ) -> EventIngestionResponse:
+        auth = self.build_auth(tenant_api_key=tenant_api_key)
+        self.require_tenant_api_key(self.http_client.default_auth.merged_with(auth))
         payload = event.to_payload()
         data = self.http_client.request(
             "POST",
             "/v1/events",
             json_body=payload,
-            auth=self.build_auth(tenant_api_key=tenant_api_key),
+            auth=auth,
         )
         return EventIngestionResponse.from_dict(dict(data))
 
@@ -58,3 +60,12 @@ class EventsResource(BaseResource):
             metadata=metadata or {},
         )
         return self.ingest(event, tenant_api_key=tenant_api_key)
+
+    def track_openai_call(self, **kwargs: Any) -> EventIngestionResponse:
+        return self.track_llm_call(provider="openai", **kwargs)
+
+    def track_anthropic_call(self, **kwargs: Any) -> EventIngestionResponse:
+        return self.track_llm_call(provider="anthropic", **kwargs)
+
+    def track_bedrock_call(self, **kwargs: Any) -> EventIngestionResponse:
+        return self.track_llm_call(provider="bedrock", **kwargs)

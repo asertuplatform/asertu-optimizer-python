@@ -11,10 +11,12 @@ class TenantsResource(BaseResource):
         *,
         bearer_token: str | None = None,
     ) -> TenantList:
+        auth = self.build_auth(bearer_token=bearer_token)
+        self.require_bearer_token(self.http_client.default_auth.merged_with(auth))
         data = self.http_client.request(
             "GET",
             "/v1/tenants",
-            auth=self.build_auth(bearer_token=bearer_token),
+            auth=auth,
         )
         return TenantList.from_dict(dict(data))
 

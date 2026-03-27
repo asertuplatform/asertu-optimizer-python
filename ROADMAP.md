@@ -1,0 +1,47 @@
+# Roadmap
+
+## 1.0.0
+
+Estado: completado
+
+- estabilizar la API publica del SDK para `events`, `tenants`, `analytics` e `history`
+- cerrar documentacion base, ejemplos y convenciones de versionado
+- endurecer errores, validaciones y compatibilidad con el contrato OpenAPI actual
+- preparar release candidata de PyPI con CI de calidad
+
+## 1.1.1
+
+Estado: completado
+
+- anadir helpers de mas alto nivel para integraciones OpenAI, Anthropic y Bedrock
+- incorporar constructor `from_env()` para bootstrap rapido
+- mejorar ergonomia de filtros temporales y presets con validacion temprana
+- reforzar la documentacion operativa y el playground de ejemplo
+
+## 1.2.0
+
+Estado: siguiente
+
+- incorporar soporte async con `httpx.AsyncClient`
+- anadir paginacion y utilidades de iteracion si la API la expone
+- incluir capas opcionales de instrumentacion automatica
+- preparar integraciones automáticas para SDKs LLM si la superficie se estabiliza
+
+## 1.2.1
+
+Estado: bloqueado por contrato
+
+- implementar endpoints admin cuando el contrato oficial publique `tenant create` y `pricing upsert`
+- sustituir `ContractUnavailableError` por integración real una vez exista OpenAPI oficial
+
+## 1.3.0
+
+- incorporar telemetria del propio SDK
+- ampliar ejemplos end-to-end por casos de uso de producto
+- documentar patrones de despliegue y multi-tenant production hardening
+
+## 2.0.0
+
+- consolidar una superficie estable para observabilidad de IA en produccion
+- revisar naming y compatibilidad de metodos antes de declarar estabilidad mayor
+- alinear completamente el SDK con el contrato admin y futuras capacidades del producto
