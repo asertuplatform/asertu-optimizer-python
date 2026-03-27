@@ -9,7 +9,6 @@
 
 - `events`
 - `tenants`
-- `pricing`
 - `analytics`
 - `history`
 - `billing`
@@ -25,7 +24,6 @@
 - `TransportError`
 - `ValidationError`
 - `MissingCredentialsError`
-- `ContractUnavailableError`
 
 ## Telemetria estable
 
@@ -36,6 +34,6 @@
 
 Los modelos tipados bajo `asertu_optimizer.models` forman parte de la superficie publica soportada para requests y responses del contrato publicado actual.
 
-## No estable por contrato
+## Regla de contrato
 
-Los endpoints admin no publicados en el OpenAPI actual siguen fuera de la parte estable del SDK, aunque existan placeholders ergonomicos en la API del cliente.
+El SDK expone unicamente capacidades respaldadas por el OpenAPI publicado. No mantiene placeholders para endpoints ausentes del Swagger.

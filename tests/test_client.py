@@ -10,12 +10,10 @@ from asertu_optimizer import (
     AsertuOptimizerClient,
     AsyncAsertuOptimizerClient,
     AuthenticationError,
-    ContractUnavailableError,
     InMemoryTelemetryCollector,
     MissingCredentialsError,
     ValidationError,
 )
-from asertu_optimizer.models import PricingRule
 
 
 def test_events_track_llm_call_sends_pythonic_payload() -> None:
@@ -238,16 +236,6 @@ def test_raises_authentication_error() -> None:
         client.tenants.list()
 
 
-def test_admin_resources_fail_closed_until_contract_exists() -> None:
-    client = AsertuOptimizerClient(admin_api_key="admin-key")
-
-    with pytest.raises(ContractUnavailableError):
-        client.tenants.create(name="Acme", plan="free")
-
-    with pytest.raises(ContractUnavailableError):
-        client.pricing.upsert(PricingRule(provider="openai", model="gpt-4.1-mini"))
-
-
 def test_requires_bearer_token_for_tenants_list() -> None:
     client = AsertuOptimizerClient()
 
@@ -462,6 +450,42 @@ def test_track_openai_response_extracts_usage() -> None:
     assert captured_body["prompt_tokens"] == 111
     assert captured_body["completion_tokens"] == 222
     assert captured_body["total_tokens"] == 333
+
+
+def test_track_anthropic_response_aggregates_iteration_usage() -> None:
+    captured_body: dict[str, object] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured_body
+        captured_body = json.loads(request.content.decode())
+        return httpx.Response(200, json={"message": "accepted"})
+
+    client = AsertuOptimizerClient(
+        tenant_api_key="tenant-key",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    client.events.track_anthropic_response(
+        feature="draft_generation",
+        status="success",
+        response={
+            "model": "claude-sonnet-4-20250514",
+            "usage": {
+                "iterations": [
+                    {"input_tokens": 100, "output_tokens": 20},
+                    {"input_tokens": 25, "output_tokens": 5},
+                ]
+            },
+        },
+    )
+
+    assert captured_body["provider"] == "anthropic"
+    assert captured_body["prompt_tokens"] == 125
+    assert captured_body["completion_tokens"] == 25
+    assert captured_body["total_tokens"] == 150
 
 
 def test_async_events_track_llm_call() -> None:

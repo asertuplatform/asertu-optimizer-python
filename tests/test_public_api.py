@@ -7,7 +7,7 @@ from asertu_optimizer import AsertuOptimizerClient, AsyncAsertuOptimizerClient
 
 
 def test_version_is_stable_release() -> None:
-    assert asertu_optimizer.__version__ == "2.0.4"
+    assert asertu_optimizer.__version__ == "3.0.0"
 
 
 def test_top_level_exports_exist() -> None:
@@ -18,7 +18,6 @@ def test_top_level_exports_exist() -> None:
         "ApiError",
         "AuthenticationError",
         "BadRequestError",
-        "ContractUnavailableError",
         "MissingCredentialsError",
         "PermissionDeniedError",
         "TransportError",
@@ -39,7 +38,6 @@ def test_clients_expose_stable_resources() -> None:
     for client in (sync_client, async_client):
         assert hasattr(client, "events")
         assert hasattr(client, "tenants")
-        assert hasattr(client, "pricing")
         assert hasattr(client, "analytics")
         assert hasattr(client, "history")
         assert hasattr(client, "billing")

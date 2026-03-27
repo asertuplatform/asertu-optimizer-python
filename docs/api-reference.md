@@ -4,7 +4,6 @@
 
 - `AsertuOptimizerClient.events`
 - `AsertuOptimizerClient.tenants`
-- `AsertuOptimizerClient.pricing`
 - `AsertuOptimizerClient.analytics`
 - `AsertuOptimizerClient.history`
 - `AsertuOptimizerClient.billing`
@@ -25,14 +24,8 @@
 
 ## Tenants
 
-- `list(bearer_token=None)`
-- `create(...)`
-  Actualmente devuelve `ContractUnavailableError` hasta que exista contrato oficial.
-
-## Pricing
-
-- `upsert(rule, admin_api_key=None)`
-  Actualmente devuelve `ContractUnavailableError` hasta que exista contrato oficial.
+- `list(bearer_token=None, limit=None, cursor=None)`
+- `iter_all(bearer_token=None, page_size=100)`
 
 ## Analytics
 
@@ -58,8 +51,14 @@
 ## Settings
 
 - `workspace(...)`
+- `members(...)`
+- `iter_all_members(...)`
+- `access_requests(...)`
+- `iter_all_access_requests(...)`
 - `create_access_request(...)`
 - `invitations(...)`
+- `iter_all_invitations(...)`
+- `resolve_invitation(token=...)`
 - `invite_member(...)`
 - `manage_invitation(...)`
 - `decide_access_request(...)`

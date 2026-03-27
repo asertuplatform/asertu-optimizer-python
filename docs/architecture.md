@@ -11,14 +11,15 @@
 ## Recursos actuales
 
 - `events`: ingesta ergonomica para llamadas LLM
-- `tenants`: descubrimiento de tenants y futura administracion
-- `pricing`: superficie reservada para pricing admin
+- `tenants`: descubrimiento de tenants del usuario autenticado
 - `analytics`: dashboard, usage, insights y recommendations
 - `history`: series temporales y breakdowns historicos
+- `billing`: catalogo y checkout del workspace
+- `settings`: workspace, miembros, invitaciones y access requests
 
 ## Principios
 
 - no modelar el SDK como un CRUD generico
 - favorecer nombres pythonicos por encima de espejar literalmente el OpenAPI
 - encapsular detalles de cabeceras multi-tenant
-- mantener el cliente listo para crecer con la API sin romper DX
+- exponer solo superficies respaldadas por el Swagger publicado

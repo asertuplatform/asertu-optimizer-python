@@ -97,18 +97,3 @@ class TenantList:
     @property
     def has_more(self) -> bool:
         return self.pagination.has_more if self.pagination is not None else False
-
-
-@dataclass(frozen=True, slots=True)
-class TenantCreateRequest:
-    name: str
-    plan: str
-    external_id: str | None = None
-    metadata: JsonDict = field(default_factory=dict)
-
-
-@dataclass(frozen=True, slots=True)
-class TenantCreateResult:
-    tenant: Tenant | None = None
-    admin_api_key: str | None = None
-    ingestion_api_key: str | None = None

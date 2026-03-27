@@ -10,7 +10,6 @@ from .async_resources import (
     AsyncBillingResource,
     AsyncEventsResource,
     AsyncHistoryResource,
-    AsyncPricingResource,
     AsyncSettingsResource,
     AsyncTenantsResource,
 )
@@ -24,7 +23,6 @@ class AsyncAsertuOptimizerClient:
     def from_env(cls) -> AsyncAsertuOptimizerClient:
         return cls(
             base_url=os.getenv("ASERTU_BASE_URL", "https://api.dev.asertu.ai"),
-            admin_api_key=os.getenv("ASERTU_ADMIN_API_KEY"),
             tenant_api_key=os.getenv("ASERTU_TENANT_API_KEY"),
             bearer_token=os.getenv("ASERTU_BEARER_TOKEN"),
             tenant_id=os.getenv("ASERTU_TENANT_ID"),
@@ -34,7 +32,6 @@ class AsyncAsertuOptimizerClient:
         self,
         *,
         base_url: str = "https://api.dev.asertu.ai",
-        admin_api_key: str | None = None,
         tenant_api_key: str | None = None,
         bearer_token: str | None = None,
         tenant_id: str | None = None,
@@ -50,7 +47,6 @@ class AsyncAsertuOptimizerClient:
             telemetry_handler=telemetry_handler,
         )
         self.auth = RequestAuth(
-            admin_api_key=admin_api_key,
             tenant_api_key=tenant_api_key,
             bearer_token=bearer_token,
             tenant_id=tenant_id,
@@ -62,7 +58,6 @@ class AsyncAsertuOptimizerClient:
         )
 
         self.tenants = AsyncTenantsResource(self._http_client)
-        self.pricing = AsyncPricingResource(self._http_client)
         self.events = AsyncEventsResource(self._http_client)
         self.analytics = AsyncAnalyticsResource(self._http_client)
         self.history = AsyncHistoryResource(self._http_client)

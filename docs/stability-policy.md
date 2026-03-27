@@ -8,9 +8,9 @@ El SDK sigue versionado semantico.
 - `MINOR`: nuevas capacidades compatibles hacia delante
 - `PATCH`: fixes y mejoras internas compatibles
 
-## Compromiso en 2.x
+## Compromiso en 3.x
 
-En la linea `2.x` se considera estable:
+En la linea `3.x` se considera estable:
 
 - los clientes sync y async
 - los nombres de recursos principales
@@ -24,7 +24,7 @@ La compatibilidad funcional del SDK se alinea con el contrato OpenAPI publicado.
 Si un endpoint no aparece en el contrato publicado:
 
 - el SDK no inventa rutas
-- puede exponer placeholders que fallen de forma explicita con `ContractUnavailableError`
+- el SDK no expone metodos para esa capacidad
 
 ## Cambios futuros
 

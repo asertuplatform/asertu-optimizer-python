@@ -36,10 +36,6 @@ class PermissionDeniedError(ApiError):
     """Raised for 403 responses."""
 
 
-class ContractUnavailableError(AsertuOptimizerError):
-    """Raised when the desired capability is not published in the current API contract."""
-
-
 class ValidationError(AsertuOptimizerError):
     """Raised when SDK inputs are invalid before sending the request."""
 

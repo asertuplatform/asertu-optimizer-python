@@ -4,7 +4,7 @@ from asertu_optimizer import AsertuOptimizerClient
 def main() -> None:
     client = AsertuOptimizerClient.from_env()
     anthropic_response = {
-        "model": "claude-3-5-sonnet",
+        "model": "claude-sonnet-4-20250514",
         "usage": {
             "input_tokens": 90,
             "output_tokens": 45,

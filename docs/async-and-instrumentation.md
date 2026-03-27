@@ -14,9 +14,10 @@ El cliente async mantiene la misma superficie que el cliente sync:
 
 - `events`
 - `tenants`
-- `pricing`
 - `analytics`
 - `history`
+- `billing`
+- `settings`
 
 ## Instrumentacion opcional
 
@@ -45,7 +46,12 @@ Helpers disponibles:
 
 ## Nota sobre paginacion
 
-La paginacion sigue pendiente porque el OpenAPI publicado hoy no expone ningun contrato paginado.
+El contrato publicado hoy ya expone paginacion en:
+
+- `tenants`
+- `settings.members`
+- `settings.access_requests`
+- `settings.invitations`
 
 ## Telemetria del SDK
 

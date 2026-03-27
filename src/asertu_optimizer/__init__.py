@@ -5,7 +5,6 @@ from .exceptions import (
     AsertuOptimizerError,
     AuthenticationError,
     BadRequestError,
-    ContractUnavailableError,
     MissingCredentialsError,
     PermissionDeniedError,
     TransportError,
@@ -13,7 +12,7 @@ from .exceptions import (
 )
 from .telemetry import InMemoryTelemetryCollector, SdkTelemetryEvent
 
-__version__ = "2.0.4"
+__version__ = "3.0.0"
 
 __all__ = [
     "AsertuOptimizerClient",
@@ -22,7 +21,6 @@ __all__ = [
     "ApiError",
     "AuthenticationError",
     "BadRequestError",
-    "ContractUnavailableError",
     "MissingCredentialsError",
     "PermissionDeniedError",
     "TransportError",

@@ -7,6 +7,7 @@
 - [Public API](public-api.md)
 - [Stability Policy](stability-policy.md)
 - [Async e instrumentacion](async-and-instrumentation.md)
+- [Provider Compatibility](provider-compatibility.md)
 - [Contract Testing](contract-testing.md)
 - [Deployment Patterns](deployment-patterns.md)
 - [Desarrollo](development.md)

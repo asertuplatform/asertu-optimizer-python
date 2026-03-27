@@ -2,7 +2,7 @@
 
 SDK oficial de Python para Asertu Optimizer, una plataforma SaaS multi-tenant para observabilidad, coste y optimizacion del uso de IA.
 
-Version actual estable: `2.0.4`
+Version actual estable: `3.0.0`
 
 Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar Asertu como un cliente REST generico.
 
@@ -11,7 +11,7 @@ Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK e
 La base del SDK ya incluye:
 
 - cliente oficial `AsertuOptimizerClient`
-- auth por `admin_api_key`, `tenant_api_key`, `bearer_token` y `tenant_id`
+- auth por `tenant_api_key`, `bearer_token` y `tenant_id`
 - eventos de observabilidad LLM
 - tenants
 - paginacion de tenants con `limit`, `cursor` e iteracion completa
@@ -44,6 +44,7 @@ La base del SDK ya incluye:
 - [Public API](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/public-api.md)
 - [Stability Policy](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/stability-policy.md)
 - [Async e instrumentacion](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/async-and-instrumentation.md)
+- [Provider Compatibility](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/provider-compatibility.md)
 - [Contract Testing](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/contract-testing.md)
 - [Deployment Patterns](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/deployment-patterns.md)
 - [Desarrollo y release](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/development.md)
@@ -113,4 +114,14 @@ Los endpoints paginables publicados hoy son:
 
 El SDK cubre esos flujos con `limit`, `cursor` e iteradores completos `iter_all_*()` tanto en sync como en async. En `settings.invitations` tambien expone `resolve_invitation(token=...)` para el flujo publico por token.
 
-Los endpoints admin para crear tenant y hacer upsert de pricing todavia no aparecen en el contrato OpenAPI publicado. Por eso el SDK expone esas superficies, pero hoy responden con una excepcion explicita `ContractUnavailableError` en vez de adivinar rutas no oficiales.
+El SDK expone unicamente metodos respaldados por el Swagger/OpenAPI publicado. No incluye administracion global de plataforma ni placeholders para endpoints fuera del contrato.
+
+## Compatibilidad de proveedores
+
+La compatibilidad documental de los helpers de instrumentacion esta verificada a fecha `2026-03-27` en [Provider Compatibility](https://github.com/asertuplatform/asertu-optimizer-python/blob/main/docs/provider-compatibility.md).
+
+En este momento:
+
+- OpenAI: compatible con respuestas tipo `Responses API` y modelos como `gpt-4.1-mini`
+- Anthropic: compatible con `Messages API` y modelos documentados como `claude-sonnet-4-20250514`
+- Bedrock: compatible con respuestas tipo `Converse` y modelos como `anthropic.claude-sonnet-4-20250514-v1:0`

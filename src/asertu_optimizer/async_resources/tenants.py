@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 
-from ..exceptions import ContractUnavailableError, ValidationError
-from ..models.tenants import Tenant, TenantCreateRequest, TenantCreateResult, TenantList
+from ..exceptions import ValidationError
+from ..models.tenants import Tenant, TenantList
 from .base import AsyncBaseResource
 
 
@@ -44,27 +44,6 @@ class AsyncTenantsResource(AsyncBaseResource):
             if not page.has_more or page.next_cursor is None:
                 return
             cursor = page.next_cursor
-
-    async def create(
-        self,
-        *,
-        name: str,
-        plan: str,
-        external_id: str | None = None,
-        metadata: dict[str, object] | None = None,
-        admin_api_key: str | None = None,
-    ) -> TenantCreateResult:
-        _ = admin_api_key
-        _ = TenantCreateRequest(
-            name=name,
-            plan=plan,
-            external_id=external_id,
-            metadata=metadata or {},
-        )
-        raise ContractUnavailableError(
-            "Tenant creation is part of the SDK surface, but the admin endpoint "
-            "is not published in the current OpenAPI contract yet."
-        )
 
     @staticmethod
     def _build_list_params(

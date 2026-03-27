@@ -19,7 +19,6 @@ from .billing import (
 from .common import Granularity, Preset
 from .events import EventIngestionRequest, EventIngestionResponse
 from .history import TimeSeries, TimeSeriesPoint
-from .pricing import PricingRule
 from .settings import (
     PublicInvitation,
     PublicInvitationLookup,
@@ -39,8 +38,6 @@ from .tenants import (
     AuthenticatedUser,
     Pagination,
     Tenant,
-    TenantCreateRequest,
-    TenantCreateResult,
     TenantList,
 )
 
@@ -62,13 +59,10 @@ __all__ = [
     "PublicInvitation",
     "PublicInvitationLookup",
     "PublicInvitationWorkspace",
-    "PricingRule",
     "RecommendationItem",
     "Recommendations",
     "Summary",
     "Tenant",
-    "TenantCreateRequest",
-    "TenantCreateResult",
     "TenantList",
     "TenantSubscription",
     "TimeSeries",

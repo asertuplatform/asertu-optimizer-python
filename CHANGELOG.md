@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.0 - 2026-03-27
+
+- documenta explicitamente la compatibilidad verificada con OpenAI, Anthropic y AWS Bedrock
+- actualiza ejemplos de Anthropic y Bedrock a identificadores de modelo alineados con la documentacion oficial actual
+- mejora la extraccion de uso en Anthropic agregando `usage.iterations` cuando el proveedor la devuelve
+- elimina de la API publica los placeholders no respaldados por Swagger: `pricing`, `tenants.create` y `admin_api_key`
+- declara como regla de diseño que el SDK solo expone metodos presentes en el OpenAPI publicado
+
 ## 2.0.4 - 2026-03-27
 
 - adapta `settings` al OpenAPI `1.23.23` incorporando paginacion oficial para miembros, access requests e invitaciones

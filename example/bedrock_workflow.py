@@ -4,7 +4,7 @@ from asertu_optimizer import AsertuOptimizerClient
 def main() -> None:
     client = AsertuOptimizerClient.from_env()
     bedrock_response = {
-        "modelId": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "modelId": "anthropic.claude-sonnet-4-20250514-v1:0",
         "usage": {
             "inputTokens": 150,
             "outputTokens": 60,

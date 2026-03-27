@@ -44,6 +44,20 @@ def _coerce_float(value: Any) -> float | None:
     return float(value)
 
 
+def _sum_iteration_usage(iterations: Any, field: str) -> int | None:
+    if not isinstance(iterations, list):
+        return None
+    values = [
+        _coerce_int(item.get(field))
+        for item in iterations
+        if isinstance(item, dict) and item.get(field) is not None
+    ]
+    filtered = [value for value in values if value is not None]
+    if not filtered:
+        return None
+    return sum(filtered)
+
+
 def extract_openai_usage(response: Any, *, model: str | None = None) -> ProviderUsage:
     resolved_model = model or _read_value(response, "model")
     input_tokens = _coerce_int(
@@ -66,8 +80,18 @@ def extract_openai_usage(response: Any, *, model: str | None = None) -> Provider
 
 def extract_anthropic_usage(response: Any, *, model: str | None = None) -> ProviderUsage:
     resolved_model = model or _read_value(response, "model")
-    input_tokens = _coerce_int(_read_value(response, "usage", "input_tokens"))
-    output_tokens = _coerce_int(_read_value(response, "usage", "output_tokens"))
+    iterations = _read_value(response, "usage", "iterations")
+    iteration_input_tokens = _sum_iteration_usage(iterations, "input_tokens")
+    iteration_output_tokens = _sum_iteration_usage(
+        iterations,
+        "output_tokens",
+    )
+    input_tokens = iteration_input_tokens or _coerce_int(
+        _read_value(response, "usage", "input_tokens")
+    )
+    output_tokens = (
+        iteration_output_tokens or _coerce_int(_read_value(response, "usage", "output_tokens"))
+    )
     total_tokens = (
         _coerce_int(_read_value(response, "usage", "total_tokens"))
         or (

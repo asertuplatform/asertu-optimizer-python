@@ -88,8 +88,23 @@ Estado: completado
 
 ## 2.0.5
 
-Estado: bloqueado por contrato
+Estado: absorbido en 3.0.0
 
-- incorporar endpoints admin reales cuando el OpenAPI los publique
-- sustituir placeholders admin por integraciones definitivas
-- evaluar nuevas capacidades de paginacion si el contrato las extiende a mas recursos
+- el SDK deja de perseguir superficies admin fuera del contrato
+- la regla pasa a ser: solo metodos publicados en Swagger
+
+## 3.0.0
+
+Estado: completado
+
+- retirar placeholders no contractuales de la API publica
+- alinear auth, recursos y documentacion estrictamente con el OpenAPI
+- documentar compatibilidad verificada por proveedor y por shape de respuesta
+
+## 3.0.1
+
+Estado: pendiente
+
+- seguir vigilando el Swagger para detectar cambios contractuales reales
+- ampliar compatibilidad de proveedores solo cuando la documentacion oficial y los shapes observados lo justifiquen
+- reforzar ejemplos end-to-end con los flujos tenant/workspace que ya existen en la API

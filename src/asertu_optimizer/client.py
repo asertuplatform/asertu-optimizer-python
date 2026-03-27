@@ -13,7 +13,6 @@ from .resources import (
     BillingResource,
     EventsResource,
     HistoryResource,
-    PricingResource,
     SettingsResource,
     TenantsResource,
 )
@@ -25,7 +24,6 @@ class AsertuOptimizerClient:
     def from_env(cls) -> AsertuOptimizerClient:
         return cls(
             base_url=os.getenv("ASERTU_BASE_URL", "https://api.dev.asertu.ai"),
-            admin_api_key=os.getenv("ASERTU_ADMIN_API_KEY"),
             tenant_api_key=os.getenv("ASERTU_TENANT_API_KEY"),
             bearer_token=os.getenv("ASERTU_BEARER_TOKEN"),
             tenant_id=os.getenv("ASERTU_TENANT_ID"),
@@ -35,7 +33,6 @@ class AsertuOptimizerClient:
         self,
         *,
         base_url: str = "https://api.dev.asertu.ai",
-        admin_api_key: str | None = None,
         tenant_api_key: str | None = None,
         bearer_token: str | None = None,
         tenant_id: str | None = None,
@@ -51,7 +48,6 @@ class AsertuOptimizerClient:
             telemetry_handler=telemetry_handler,
         )
         self.auth = RequestAuth(
-            admin_api_key=admin_api_key,
             tenant_api_key=tenant_api_key,
             bearer_token=bearer_token,
             tenant_id=tenant_id,
@@ -63,7 +59,6 @@ class AsertuOptimizerClient:
         )
 
         self.tenants = TenantsResource(self._http_client)
-        self.pricing = PricingResource(self._http_client)
         self.events = EventsResource(self._http_client)
         self.analytics = AnalyticsResource(self._http_client)
         self.history = HistoryResource(self._http_client)
