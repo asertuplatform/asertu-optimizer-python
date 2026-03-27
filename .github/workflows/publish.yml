@@ -4,10 +4,23 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      repository:
+        description: "Target package index"
+        required: true
+        default: "testpypi"
+        type: choice
+        options:
+          - testpypi
+          - pypi
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.version.outputs.package_version }}
+      publish_target: ${{ steps.target.outputs.publish_target }}
+      environment_name: ${{ steps.target.outputs.environment_name }}
 
     steps:
       - uses: actions/checkout@v4
@@ -15,6 +28,55 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Resolve publish target
+        id: target
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "publish_target=pypi" >> "$GITHUB_OUTPUT"
+            echo "environment_name=pypi" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.repository }}" = "pypi" ]; then
+            echo "publish_target=pypi" >> "$GITHUB_OUTPUT"
+            echo "environment_name=pypi" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish_target=testpypi" >> "$GITHUB_OUTPUT"
+            echo "environment_name=testpypi" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract package version
+        id: version
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from pathlib import Path
+          import re
+
+          text = Path("pyproject.toml").read_text()
+          match = re.search(r'^version = "([^"]+)"$', text, re.MULTILINE)
+          if not match:
+              raise SystemExit("Unable to determine package version from pyproject.toml")
+          print(f"package_version={match.group(1)}")
+          PY
+
+      - name: Validate release tag matches package version
+        if: github.event_name == 'release'
+        shell: bash
+        run: |
+          expected_tag="v${{ steps.version.outputs.package_version }}"
+          actual_tag="${{ github.event.release.tag_name }}"
+          if [ "$actual_tag" != "$expected_tag" ]; then
+            echo "Release tag $actual_tag does not match package version $expected_tag"
+            exit 1
+          fi
+
+      - name: Guard manual production publish
+        if: github.event_name == 'workflow_dispatch' && steps.target.outputs.publish_target == 'pypi'
+        shell: bash
+        run: |
+          echo "Manual publish to production PyPI is disabled."
+          echo "Create a GitHub Release for tag v${{ steps.version.outputs.package_version }} instead."
+          exit 1
 
       - name: Install build tool
         run: python -m pip install --upgrade build
@@ -30,7 +92,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
-    environment: pypi
+    environment: ${{ needs.build.outputs.environment_name }}
     permissions:
       id-token: write
 
@@ -40,4 +102,12 @@ jobs:
           name: python-package-distributions
           path: dist/
 
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish distribution to PyPI
+        if: needs.build.outputs.publish_target == 'pypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Publish distribution to TestPyPI
+        if: needs.build.outputs.publish_target == 'testpypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/

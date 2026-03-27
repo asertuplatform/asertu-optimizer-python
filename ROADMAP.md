@@ -62,6 +62,14 @@ Estado: completado
 
 ## 2.0.2
 
+Estado: completado
+
+- consolidar la convencion documental: `README.md` para documentos canonicos e `lowercase-kebab-case` para docs tematicos
+- actualizar enlaces internos, packaging y puntos de entrada documentales segun esa convencion
+- endurecer el workflow de publicacion con validacion tag-version y ruta manual segura a TestPyPI
+
+## 2.0.3
+
 Estado: bloqueado por contrato
 
 - incorporar endpoints admin reales cuando el OpenAPI los publique

@@ -41,9 +41,30 @@ ASERTU_RUN_LIVE_CONTRACT_TEST=1 python3 -m pytest tests/test_openapi_contract.py
 
 El workflow [`publish.yml`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/.github/workflows/publish.yml) sigue encargado de la publicacion a PyPI.
 
+Comportamiento actual del workflow:
+
+- una GitHub Release publicada envia el paquete a PyPI
+- una ejecucion manual con `workflow_dispatch` publica en TestPyPI por defecto
+- el workflow bloquea la publicacion manual a PyPI para evitar releases accidentales
+- en releases, valida que el tag `vX.Y.Z` coincide con la version `X.Y.Z` de `pyproject.toml`
+
+Precondiciones fuera del repo:
+
+1. crear el proyecto `asertu-optimizer` en PyPI
+2. configurar un Trusted Publisher en PyPI para este repo y este workflow
+3. crear el environment `pypi` en GitHub
+4. crear el environment `testpypi` en GitHub si se va a usar la ruta manual de validacion
+
 Antes de publicar:
 
 1. actualiza `CHANGELOG.md`
 2. actualiza la version en `pyproject.toml`
 3. verifica localmente `ruff`, `mypy`, `pytest` y `build`
-4. crea release en GitHub
+4. crea y sube el tag `vX.Y.Z`
+5. crea la GitHub Release publicada sobre ese tag para enviar a PyPI
+
+Para validar antes en TestPyPI:
+
+1. ejecuta el workflow `Publish Python package` manualmente
+2. deja `repository=testpypi`
+3. revisa que la subida termine bien antes de la release final

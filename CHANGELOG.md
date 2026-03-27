@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.2 - 2026-03-27
+
+- consolida la convención documental del repo con nombres canónicos para `README.md`, `CHANGELOG.md`, `MIGRATION.md` y `ROADMAP.md`
+- endurece el workflow de publicación con validación entre tag y versión del paquete
+- separa la publicación automática a PyPI de la validación manual en TestPyPI
+- documenta las precondiciones de Trusted Publisher y el proceso operativo de release
+
 ## 2.0.1 - 2026-03-27
 
 - anade contract checks live contra el OpenAPI publicado con gating explicito por variable de entorno
