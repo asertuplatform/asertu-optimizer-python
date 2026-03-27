@@ -1,0 +1,33 @@
+name: Smoke Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      ASERTU_BASE_URL: ${{ secrets.ASERTU_BASE_URL }}
+      ASERTU_BEARER_TOKEN: ${{ secrets.ASERTU_BEARER_TOKEN }}
+      ASERTU_TENANT_ID: ${{ secrets.ASERTU_TENANT_ID }}
+      ASERTU_TENANT_API_KEY: ${{ secrets.ASERTU_TENANT_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+
+      - name: Check secrets
+        run: |
+          if [ -z "${ASERTU_BEARER_TOKEN}" ]; then
+            echo "ASERTU_BEARER_TOKEN secret is required for smoke tests"
+            exit 1
+          fi
+
+      - name: Run smoke check
+        run: python scripts/smoke_check.py

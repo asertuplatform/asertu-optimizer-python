@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1 - 2026-03-27
+
+- anade contract checks live contra el OpenAPI publicado con gating explicito por variable de entorno
+- incorpora smoke workflow manual para validar tenants, analytics, billing y event ingestion contra dev
+- amplia la carpeta `example/` con flujos dedicados para OpenAI, Anthropic y Bedrock
+- documenta el proceso de contract testing y el uso de secrets operativos en CI
+
 ## 2.0.0 - 2026-03-27
 
 - declara estable la superficie publica del SDK sobre el contrato OpenAPI publicado actual

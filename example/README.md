@@ -9,6 +9,9 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 - [`playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/playground.py)
 - [`async_playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/async_playground.py)
 - [`workspace_billing_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/workspace_billing_workflow.py)
+- [`openai_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/openai_workflow.py)
+- [`anthropic_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/anthropic_workflow.py)
+- [`bedrock_workflow.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/bedrock_workflow.py)
 
 ## Flujos actuales
 
@@ -19,6 +22,7 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 - `analytics-summary`: consulta resumen del dashboard
 - `history-daily-cost`: consulta coste historico
 - `workspace + billing`: flujo end-to-end de settings, billing y telemetria
+- `openai / anthropic / bedrock`: ejemplos por proveedor usando helpers de respuesta
 
 ## Variables de entorno
 
@@ -37,4 +41,7 @@ python3 example/playground.py track-openai-response
 python3 example/playground.py analytics-summary --preset today
 python3 example/async_playground.py analytics-summary --preset today
 python3 example/workspace_billing_workflow.py
+python3 example/openai_workflow.py
+python3 example/anthropic_workflow.py
+python3 example/bedrock_workflow.py
 ```

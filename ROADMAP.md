@@ -53,6 +53,15 @@ Estado: completado
 
 ## 2.0.1
 
+Estado: completado
+
+- automatizar contract checks contra el OpenAPI publicado
+- anadir smoke tests manuales contra entorno dev
+- ampliar ejemplos por proveedor para OpenAI, Anthropic y Bedrock
+- reforzar documentacion operativa para mantenimiento del SDK
+
+## 2.0.2
+
 Estado: bloqueado por contrato
 
 - incorporar endpoints admin reales cuando el OpenAPI los publique

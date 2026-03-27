@@ -2,7 +2,7 @@
 
 SDK oficial de Python para Asertu Optimizer, una plataforma SaaS multi-tenant para observabilidad, coste y optimizacion del uso de IA.
 
-Version actual estable: `2.0.0`
+Version actual estable: `2.0.1`
 
 Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar Asertu como un cliente REST generico.
 
@@ -42,6 +42,7 @@ La base del SDK ya incluye:
 - [Public API](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/public-api.md)
 - [Stability Policy](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/stability-policy.md)
 - [Async e instrumentacion](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/async-and-instrumentation.md)
+- [Contract Testing](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/contract-testing.md)
 - [Deployment Patterns](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/deployment-patterns.md)
 - [Desarrollo y release](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/development.md)
 - [Migration](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/MIGRATION.md)
