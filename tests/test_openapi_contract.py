@@ -42,6 +42,9 @@ def test_openapi_contract_version_and_paths() -> None:
     assert "/v1/events" in paths
     assert "/v1/tenants" in paths
     assert "/v1/settings/workspace" in paths
+    assert "/v1/settings/members" in paths
+    assert "/v1/settings/access-requests" in paths
+    assert "/v1/settings/invitations" in paths
     assert "/v1/billing/catalog" in paths
     tenant_parameters = cast(list[dict[str, Any]], paths["/v1/tenants"]["get"]["parameters"])
     components = cast(dict[str, Any], contract["components"])
@@ -51,6 +54,33 @@ def test_openapi_contract_version_and_paths() -> None:
         for item in tenant_parameters
     ]
     assert parameter_names == ["limit", "cursor"]
+    settings_members_parameters = cast(
+        list[dict[str, Any]],
+        paths["/v1/settings/members"]["get"]["parameters"],
+    )
+    settings_members_names = [
+        cast(dict[str, Any], component_parameters[item["$ref"].split("/")[-1]])["name"]
+        for item in settings_members_parameters
+    ]
+    assert settings_members_names == ["limit", "cursor"]
+    access_requests_parameters = cast(
+        list[dict[str, Any]],
+        paths["/v1/settings/access-requests"]["get"]["parameters"],
+    )
+    access_requests_names = [
+        cast(dict[str, Any], component_parameters[item["$ref"].split("/")[-1]])["name"]
+        for item in access_requests_parameters
+    ]
+    assert access_requests_names == ["scope", "limit", "cursor"]
+    invitation_parameters = cast(
+        list[dict[str, Any]],
+        paths["/v1/settings/invitations"]["get"]["parameters"],
+    )
+    invitation_names = [
+        cast(dict[str, Any], component_parameters[item["$ref"].split("/")[-1]])["name"]
+        for item in invitation_parameters
+    ]
+    assert invitation_names == ["token", "limit", "cursor"]
 
 
 def test_openapi_contract_exposes_expected_schemas() -> None:
@@ -65,9 +95,16 @@ def test_openapi_contract_exposes_expected_schemas() -> None:
     assert "TenantsResponse" in schemas
     assert "Pagination" in schemas
     assert "WorkspaceSettingsResponse" in schemas
+    assert "WorkspaceMembersResponse" in schemas
+    assert "AccessRequestsResponse" in schemas
+    assert "WorkspaceInvitationsResponse" in schemas
+    assert "PublicInvitationLookupResponse" in schemas
     assert "BillingCatalogResponse" in schemas
 
     assert "plan_id" in tenant_properties
     assert "subscription_status" in tenant_properties
     response_properties = cast(dict[str, Any], schemas["TenantsResponse"]["properties"])
     assert "pagination" in response_properties
+    settings_properties = cast(dict[str, Any], schemas["WorkspaceSettingsResponse"]["properties"])
+    assert "permissions" in settings_properties
+    assert "notifications" in settings_properties

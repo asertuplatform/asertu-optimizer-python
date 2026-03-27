@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.4 - 2026-03-27
+
+- adapta `settings` al OpenAPI `1.23.23` incorporando paginacion oficial para miembros, access requests e invitaciones
+- añade listados y recorridos completos sync y async para `members`, `access_requests` e `invitations`
+- incorpora `resolve_invitation(token=...)` para el lookup publico de invitaciones
+- actualiza el mapeo de `WorkspaceSettingsResponse` con permisos, notificaciones y nombres de campos del contrato actual
+
 ## 2.0.3 - 2026-03-27
 
 - corrige el `README` publicado en PyPI para usar enlaces web publicos en lugar de rutas locales

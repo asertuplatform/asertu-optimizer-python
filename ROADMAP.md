@@ -80,8 +80,16 @@ Estado: completado
 
 ## 2.0.4
 
+Estado: completado
+
+- revisar todos los endpoints del contrato para detectar superficies paginables
+- extender el soporte de paginacion a `settings.members`, `settings.access_requests` y `settings.invitations`
+- alinear `settings` con los schemas actuales del OpenAPI, incluyendo permisos y lookup publico de invitaciones
+
+## 2.0.5
+
 Estado: bloqueado por contrato
 
 - incorporar endpoints admin reales cuando el OpenAPI los publique
 - sustituir placeholders admin por integraciones definitivas
-- evaluar nuevas capacidades de paginacion si el contrato las extiende fuera de `tenants`
+- evaluar nuevas capacidades de paginacion si el contrato las extiende a mas recursos

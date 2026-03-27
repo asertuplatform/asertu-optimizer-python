@@ -21,11 +21,17 @@ from .events import EventIngestionRequest, EventIngestionResponse
 from .history import TimeSeries, TimeSeriesPoint
 from .pricing import PricingRule
 from .settings import (
+    PublicInvitation,
+    PublicInvitationLookup,
+    PublicInvitationWorkspace,
     WorkspaceAccessRequest,
+    WorkspaceAccessRequestsPage,
     WorkspaceInvitation,
     WorkspaceInvitations,
     WorkspaceMember,
+    WorkspaceMembersPage,
     WorkspaceMutationResult,
+    WorkspacePermissions,
     WorkspaceSettings,
     WorkspaceSnapshot,
 )
@@ -53,6 +59,9 @@ __all__ = [
     "EventIngestionResponse",
     "Granularity",
     "Preset",
+    "PublicInvitation",
+    "PublicInvitationLookup",
+    "PublicInvitationWorkspace",
     "PricingRule",
     "RecommendationItem",
     "Recommendations",
@@ -67,10 +76,13 @@ __all__ = [
     "UsageBreakdown",
     "UsageBreakdownItem",
     "WorkspaceAccessRequest",
+    "WorkspaceAccessRequestsPage",
     "WorkspaceInvitation",
     "WorkspaceInvitations",
     "WorkspaceMember",
+    "WorkspaceMembersPage",
     "WorkspaceMutationResult",
+    "WorkspacePermissions",
     "WorkspaceSettings",
     "WorkspaceSnapshot",
 ]

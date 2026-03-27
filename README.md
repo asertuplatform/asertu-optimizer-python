@@ -2,7 +2,7 @@
 
 SDK oficial de Python para Asertu Optimizer, una plataforma SaaS multi-tenant para observabilidad, coste y optimizacion del uso de IA.
 
-Version actual estable: `2.0.3`
+Version actual estable: `2.0.4`
 
 Este repositorio contiene exclusivamente el SDK Python oficial. La API del SDK esta pensada para integrarse de forma natural en aplicaciones que ya usan LLMs y necesitan registrar eventos, consultar analitica e incorporar historial e insights sin tratar Asertu como un cliente REST generico.
 
@@ -19,6 +19,7 @@ La base del SDK ya incluye:
 - history
 - billing
 - settings
+- paginacion adicional en `settings.members`, `settings.access_requests` y `settings.invitations`
 - insights y recommendations
 - helpers para OpenAI, Anthropic y Bedrock
 - constructor `AsertuOptimizerClient.from_env()`
@@ -103,6 +104,13 @@ await async_client.aclose()
 
 El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato publicado sube a `version: 1.23.23` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
 
-El endpoint `GET /v1/tenants` ahora expone paginacion oficial con `limit` y `cursor`, y el SDK lo cubre con `client.tenants.list(limit=..., cursor=...)` e `iter_all()` tanto en sync como en async.
+Los endpoints paginables publicados hoy son:
+
+- `GET /v1/tenants`
+- `GET /v1/settings/members`
+- `GET /v1/settings/access-requests`
+- `GET /v1/settings/invitations`
+
+El SDK cubre esos flujos con `limit`, `cursor` e iteradores completos `iter_all_*()` tanto en sync como en async. En `settings.invitations` tambien expone `resolve_invitation(token=...)` para el flujo publico por token.
 
 Los endpoints admin para crear tenant y hacer upsert de pricing todavia no aparecen en el contrato OpenAPI publicado. Por eso el SDK expone esas superficies, pero hoy responden con una excepcion explicita `ContractUnavailableError` en vez de adivinar rutas no oficiales.

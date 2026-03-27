@@ -650,7 +650,13 @@ def test_settings_workspace_maps_new_contract() -> None:
         return httpx.Response(
             200,
             json={
-                "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                "workspace": {
+                    "tenant_id": "tenant-123",
+                    "name": "Acme",
+                    "plan": "free",
+                    "status": "active",
+                    "role": "owner",
+                },
                 "members": [
                     {
                         "email": "owner@acme.ai",
@@ -661,8 +667,9 @@ def test_settings_workspace_maps_new_contract() -> None:
                     }
                 ],
                 "invitations": [],
-                "my_access_requests": [],
-                "access_queue": [],
+                "notifications": [{"type": "billing", "message": "Upgrade available"}],
+                "access_requests": [],
+                "workspace_requests": [],
             },
         )
 
@@ -679,7 +686,151 @@ def test_settings_workspace_maps_new_contract() -> None:
 
     assert result.workspace is not None
     assert result.workspace.name == "Acme"
+    assert result.workspace.plan == "free"
     assert result.members[0].email == "owner@acme.ai"
+    assert result.notifications[0]["type"] == "billing"
+
+
+def test_settings_members_support_pagination() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/v1/settings/members"
+        assert request.url.params["limit"] == "25"
+        assert request.url.params["cursor"] == "cursor-1"
+        return httpx.Response(
+            200,
+            json={
+                "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                "members": [{"email": "owner@acme.ai", "role": "owner", "status": "active"}],
+                "pagination": {"limit": 25, "next_cursor": "cursor-2", "has_more": True},
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        tenant_id="tenant-123",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    result = client.settings.members(limit=25, cursor="cursor-1")
+
+    assert result.items[0].email == "owner@acme.ai"
+    assert result.has_more is True
+    assert result.next_cursor == "cursor-2"
+
+
+def test_settings_access_requests_support_scope_and_pagination() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/v1/settings/access-requests"
+        assert request.url.params["scope"] == "workspace"
+        assert request.url.params["limit"] == "10"
+        return httpx.Response(
+            200,
+            json={
+                "scope": "workspace",
+                "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                "requests": [
+                    {
+                        "request_id": "req-1",
+                        "tenant_id": "tenant-999",
+                        "tenant_name": "Beta",
+                        "email": "user@beta.ai",
+                        "status": "pending",
+                    }
+                ],
+                "pagination": {"limit": 10, "next_cursor": None, "has_more": False},
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        tenant_id="tenant-123",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    result = client.settings.access_requests(scope="workspace", limit=10)
+
+    assert result.scope == "workspace"
+    assert result.items[0].request_id == "req-1"
+    assert result.has_more is False
+
+
+def test_settings_resolve_public_invitation_without_auth() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/v1/settings/invitations"
+        assert request.url.params["token"] == "invite-token"
+        assert "Authorization" not in request.headers
+        return httpx.Response(
+            200,
+            json={
+                "invitation": {
+                    "token": "invite-token",
+                    "tenant_id": "tenant-123",
+                    "workspace_name": "Acme",
+                    "email": "member@acme.ai",
+                    "role": "viewer",
+                    "status": "pending",
+                    "intent_options": ["join"],
+                    "existing_workspaces": [],
+                }
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    result = client.settings.resolve_invitation(token="invite-token")
+
+    assert result.invitation is not None
+    assert result.invitation.workspace_name == "Acme"
+
+
+def test_settings_iter_all_invitations_pages_until_exhausted() -> None:
+    seen_cursors: list[str | None] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        cursor = request.url.params.get("cursor")
+        seen_cursors.append(cursor)
+        if cursor is None:
+            return httpx.Response(
+                200,
+                json={
+                    "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                    "invitations": [{"invitation_id": "inv-1", "email": "one@acme.ai"}],
+                    "pagination": {"limit": 1, "next_cursor": "cursor-2", "has_more": True},
+                },
+            )
+        return httpx.Response(
+            200,
+            json={
+                "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                "invitations": [{"invitation_id": "inv-2", "email": "two@acme.ai"}],
+                "pagination": {"limit": 1, "next_cursor": None, "has_more": False},
+            },
+        )
+
+    client = AsertuOptimizerClient(
+        bearer_token="jwt-token",
+        tenant_id="tenant-123",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    items = list(client.settings.iter_all_invitations(page_size=1))
+
+    assert [item.invitation_id for item in items] == ["inv-1", "inv-2"]
+    assert seen_cursors == [None, "cursor-2"]
 
 
 def test_sync_telemetry_emits_events() -> None:
@@ -730,5 +881,51 @@ def test_async_settings_invite_member() -> None:
             await client.aclose()
 
         assert result.status == "created"
+
+    asyncio.run(run())
+
+
+def test_async_settings_iter_all_members_pages_until_exhausted() -> None:
+    async def run() -> None:
+        seen_cursors: list[str | None] = []
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            cursor = request.url.params.get("cursor")
+            seen_cursors.append(cursor)
+            if cursor is None:
+                return httpx.Response(
+                    200,
+                    json={
+                        "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                        "members": [{"email": "one@acme.ai", "role": "owner"}],
+                        "pagination": {"limit": 1, "next_cursor": "cursor-2", "has_more": True},
+                    },
+                )
+            return httpx.Response(
+                200,
+                json={
+                    "workspace": {"tenant_id": "tenant-123", "name": "Acme", "role": "owner"},
+                    "members": [{"email": "two@acme.ai", "role": "viewer"}],
+                    "pagination": {"limit": 1, "next_cursor": None, "has_more": False},
+                },
+            )
+
+        client = AsyncAsertuOptimizerClient(
+            bearer_token="jwt-token",
+            tenant_id="tenant-123",
+            http_client=httpx.AsyncClient(
+                base_url="https://api.dev.asertu.ai",
+                transport=httpx.MockTransport(handler),
+            ),
+        )
+        try:
+            collected = []
+            async for item in client.settings.iter_all_members(page_size=1):
+                collected.append(item.email)
+        finally:
+            await client.aclose()
+
+        assert collected == ["one@acme.ai", "two@acme.ai"]
+        assert seen_cursors == [None, "cursor-2"]
 
     asyncio.run(run())

@@ -1,7 +1,16 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
+
+from ..exceptions import ValidationError
 from ..models.settings import (
+    PublicInvitationLookup,
+    WorkspaceAccessRequest,
+    WorkspaceAccessRequestsPage,
+    WorkspaceInvitation,
     WorkspaceInvitations,
+    WorkspaceMember,
+    WorkspaceMembersPage,
     WorkspaceMutationResult,
     WorkspaceSettings,
 )
@@ -44,11 +53,139 @@ class SettingsResource(BaseResource):
         *,
         tenant_id: str | None = None,
         bearer_token: str | None = None,
+        limit: int | None = None,
+        cursor: str | None = None,
     ) -> WorkspaceInvitations:
         auth = self.build_auth(bearer_token=bearer_token, tenant_id=tenant_id)
         self.require_tenant_scope(self.http_client.default_auth.merged_with(auth))
-        data = self.http_client.request("GET", "/v1/settings/invitations", auth=auth)
+        data = self.http_client.request(
+            "GET",
+            "/v1/settings/invitations",
+            params=self._build_pagination_params(limit=limit, cursor=cursor),
+            auth=auth,
+        )
         return WorkspaceInvitations.from_dict(dict(data))
+
+    def members(
+        self,
+        *,
+        tenant_id: str | None = None,
+        bearer_token: str | None = None,
+        limit: int | None = None,
+        cursor: str | None = None,
+    ) -> WorkspaceMembersPage:
+        auth = self.build_auth(bearer_token=bearer_token, tenant_id=tenant_id)
+        self.require_tenant_scope(self.http_client.default_auth.merged_with(auth))
+        data = self.http_client.request(
+            "GET",
+            "/v1/settings/members",
+            params=self._build_pagination_params(limit=limit, cursor=cursor),
+            auth=auth,
+        )
+        return WorkspaceMembersPage.from_dict(dict(data))
+
+    def iter_all_members(
+        self,
+        *,
+        tenant_id: str | None = None,
+        bearer_token: str | None = None,
+        page_size: int = 100,
+    ) -> Iterator[WorkspaceMember]:
+        cursor: str | None = None
+        while True:
+            page = self.members(
+                tenant_id=tenant_id,
+                bearer_token=bearer_token,
+                limit=page_size,
+                cursor=cursor,
+            )
+            yield from page.items
+            if not page.has_more or page.next_cursor is None:
+                return
+            cursor = page.next_cursor
+
+    def access_requests(
+        self,
+        *,
+        scope: str = "my",
+        tenant_id: str | None = None,
+        bearer_token: str | None = None,
+        limit: int | None = None,
+        cursor: str | None = None,
+    ) -> WorkspaceAccessRequestsPage:
+        if scope not in {"my", "workspace"}:
+            raise ValidationError("scope must be either 'my' or 'workspace'.")
+        auth = self.build_auth(bearer_token=bearer_token, tenant_id=tenant_id)
+        merged_auth = self.http_client.default_auth.merged_with(auth)
+        if scope == "workspace":
+            self.require_tenant_scope(merged_auth)
+        else:
+            self.require_bearer_token(merged_auth)
+        params = self._build_pagination_params(limit=limit, cursor=cursor) or {}
+        params["scope"] = scope
+        data = self.http_client.request(
+            "GET",
+            "/v1/settings/access-requests",
+            params=params,
+            auth=auth,
+        )
+        return WorkspaceAccessRequestsPage.from_dict(dict(data))
+
+    def iter_all_access_requests(
+        self,
+        *,
+        scope: str = "my",
+        tenant_id: str | None = None,
+        bearer_token: str | None = None,
+        page_size: int = 100,
+    ) -> Iterator[WorkspaceAccessRequest]:
+        cursor: str | None = None
+        while True:
+            page = self.access_requests(
+                scope=scope,
+                tenant_id=tenant_id,
+                bearer_token=bearer_token,
+                limit=page_size,
+                cursor=cursor,
+            )
+            yield from page.items
+            if not page.has_more or page.next_cursor is None:
+                return
+            cursor = page.next_cursor
+
+    def resolve_invitation(
+        self,
+        *,
+        token: str,
+    ) -> PublicInvitationLookup:
+        if not token.strip():
+            raise ValidationError("token must not be empty.")
+        data = self.http_client.request(
+            "GET",
+            "/v1/settings/invitations",
+            params={"token": token},
+        )
+        return PublicInvitationLookup.from_dict(dict(data))
+
+    def iter_all_invitations(
+        self,
+        *,
+        tenant_id: str | None = None,
+        bearer_token: str | None = None,
+        page_size: int = 100,
+    ) -> Iterator[WorkspaceInvitation]:
+        cursor: str | None = None
+        while True:
+            page = self.invitations(
+                tenant_id=tenant_id,
+                bearer_token=bearer_token,
+                limit=page_size,
+                cursor=cursor,
+            )
+            yield from page.items
+            if not page.has_more or page.next_cursor is None:
+                return
+            cursor = page.next_cursor
 
     def invite_member(
         self,
@@ -127,3 +264,20 @@ class SettingsResource(BaseResource):
         self.require_tenant_scope(self.http_client.default_auth.merged_with(auth))
         data = self.http_client.request("POST", path, json_body=payload, auth=auth)
         return WorkspaceMutationResult.from_dict(dict(data))
+
+    @staticmethod
+    def _build_pagination_params(
+        *,
+        limit: int | None,
+        cursor: str | None,
+    ) -> dict[str, str] | None:
+        params: dict[str, str] = {}
+        if limit is not None:
+            if limit < 1 or limit > 100:
+                raise ValidationError("limit must be between 1 and 100.")
+            params["limit"] = str(limit)
+        if cursor is not None:
+            if not cursor.strip():
+                raise ValidationError("cursor must not be empty.")
+            params["cursor"] = cursor
+        return params or None
