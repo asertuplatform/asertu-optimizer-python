@@ -35,6 +35,23 @@ def track_openai_event(client: AsertuOptimizerClient, _: argparse.Namespace) -> 
     pprint(result)
 
 
+def track_openai_response(client: AsertuOptimizerClient, _: argparse.Namespace) -> None:
+    result = client.events.track_openai_response(
+        feature="support_chat",
+        status="success",
+        response={
+            "model": "gpt-4.1-mini",
+            "usage": {
+                "prompt_tokens": 1200,
+                "completion_tokens": 800,
+                "total_tokens": 2000,
+            },
+        },
+        metadata={"source": "example.playground", "helper": "track_openai_response"},
+    )
+    pprint(result)
+
+
 def list_tenants(client: AsertuOptimizerClient, _: argparse.Namespace) -> None:
     pprint(client.tenants.list())
 
@@ -66,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("track-event")
     subparsers.add_parser("track-openai-event")
+    subparsers.add_parser("track-openai-response")
     subparsers.add_parser("list-tenants")
 
     analytics_parser = subparsers.add_parser("analytics-summary")
@@ -90,6 +108,7 @@ def main() -> None:
     handlers = {
         "track-event": track_event,
         "track-openai-event": track_openai_event,
+        "track-openai-response": track_openai_response,
         "list-tenants": list_tenants,
         "analytics-summary": analytics_summary,
         "history-daily-cost": history_daily_cost,

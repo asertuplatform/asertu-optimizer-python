@@ -1,3 +1,4 @@
+from .async_client import AsyncAsertuOptimizerClient
 from .client import AsertuOptimizerClient
 from .exceptions import (
     ApiError,
@@ -11,10 +12,11 @@ from .exceptions import (
     ValidationError,
 )
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 __all__ = [
     "AsertuOptimizerClient",
+    "AsyncAsertuOptimizerClient",
     "AsertuOptimizerError",
     "ApiError",
     "AuthenticationError",

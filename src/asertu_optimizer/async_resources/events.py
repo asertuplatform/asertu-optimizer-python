@@ -6,11 +6,11 @@ from uuid import uuid4
 
 from ..instrumentation import extract_provider_usage
 from ..models.events import EventIngestionRequest, EventIngestionResponse
-from .base import BaseResource
+from .base import AsyncBaseResource
 
 
-class EventsResource(BaseResource):
-    def ingest(
+class AsyncEventsResource(AsyncBaseResource):
+    async def ingest(
         self,
         event: EventIngestionRequest,
         *,
@@ -18,16 +18,15 @@ class EventsResource(BaseResource):
     ) -> EventIngestionResponse:
         auth = self.build_auth(tenant_api_key=tenant_api_key)
         self.require_tenant_api_key(self.http_client.default_auth.merged_with(auth))
-        payload = event.to_payload()
-        data = self.http_client.request(
+        data = await self.http_client.request(
             "POST",
             "/v1/events",
-            json_body=payload,
+            json_body=event.to_payload(),
             auth=auth,
         )
         return EventIngestionResponse.from_dict(dict(data))
 
-    def track_llm_call(
+    async def track_llm_call(
         self,
         *,
         provider: str,
@@ -60,18 +59,18 @@ class EventsResource(BaseResource):
             cost=cost,
             metadata=metadata or {},
         )
-        return self.ingest(event, tenant_api_key=tenant_api_key)
+        return await self.ingest(event, tenant_api_key=tenant_api_key)
 
-    def track_openai_call(self, **kwargs: Any) -> EventIngestionResponse:
-        return self.track_llm_call(provider="openai", **kwargs)
+    async def track_openai_call(self, **kwargs: Any) -> EventIngestionResponse:
+        return await self.track_llm_call(provider="openai", **kwargs)
 
-    def track_anthropic_call(self, **kwargs: Any) -> EventIngestionResponse:
-        return self.track_llm_call(provider="anthropic", **kwargs)
+    async def track_anthropic_call(self, **kwargs: Any) -> EventIngestionResponse:
+        return await self.track_llm_call(provider="anthropic", **kwargs)
 
-    def track_bedrock_call(self, **kwargs: Any) -> EventIngestionResponse:
-        return self.track_llm_call(provider="bedrock", **kwargs)
+    async def track_bedrock_call(self, **kwargs: Any) -> EventIngestionResponse:
+        return await self.track_llm_call(provider="bedrock", **kwargs)
 
-    def track_provider_response(
+    async def track_provider_response(
         self,
         *,
         provider: str,
@@ -88,7 +87,7 @@ class EventsResource(BaseResource):
         event_type: str = "llm_request",
     ) -> EventIngestionResponse:
         usage = extract_provider_usage(provider, response, model=model)
-        return self.track_llm_call(
+        return await self.track_llm_call(
             provider=usage.provider,
             model=usage.model or model or "unknown",
             feature=feature,
@@ -105,11 +104,11 @@ class EventsResource(BaseResource):
             event_type=event_type,
         )
 
-    def track_openai_response(self, **kwargs: Any) -> EventIngestionResponse:
-        return self.track_provider_response(provider="openai", **kwargs)
+    async def track_openai_response(self, **kwargs: Any) -> EventIngestionResponse:
+        return await self.track_provider_response(provider="openai", **kwargs)
 
-    def track_anthropic_response(self, **kwargs: Any) -> EventIngestionResponse:
-        return self.track_provider_response(provider="anthropic", **kwargs)
+    async def track_anthropic_response(self, **kwargs: Any) -> EventIngestionResponse:
+        return await self.track_provider_response(provider="anthropic", **kwargs)
 
-    def track_bedrock_response(self, **kwargs: Any) -> EventIngestionResponse:
-        return self.track_provider_response(provider="bedrock", **kwargs)
+    async def track_bedrock_response(self, **kwargs: Any) -> EventIngestionResponse:
+        return await self.track_provider_response(provider="bedrock", **kwargs)

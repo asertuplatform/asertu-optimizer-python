@@ -20,17 +20,18 @@ Estado: completado
 
 ## 1.2.0
 
-Estado: siguiente
+Estado: completado
 
 - incorporar soporte async con `httpx.AsyncClient`
-- anadir paginacion y utilidades de iteracion si la API la expone
 - incluir capas opcionales de instrumentacion automatica
 - preparar integraciones automáticas para SDKs LLM si la superficie se estabiliza
+- documentar que la paginacion sigue pendiente de soporte del contrato OpenAPI
 
 ## 1.2.1
 
 Estado: bloqueado por contrato
 
+- anadir paginacion y utilidades de iteracion si la API la expone
 - implementar endpoints admin cuando el contrato oficial publique `tenant create` y `pricing upsert`
 - sustituir `ContractUnavailableError` por integración real una vez exista OpenAPI oficial
 

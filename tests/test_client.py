@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 
 import httpx
@@ -7,6 +8,7 @@ import pytest
 
 from asertu_optimizer import (
     AsertuOptimizerClient,
+    AsyncAsertuOptimizerClient,
     AuthenticationError,
     ContractUnavailableError,
     MissingCredentialsError,
@@ -333,3 +335,109 @@ def test_from_env_builds_client(monkeypatch: pytest.MonkeyPatch) -> None:
     assert client.auth.tenant_api_key == "tenant-key"
     assert client.auth.bearer_token == "jwt-token"
     assert client.auth.tenant_id == "tenant-123"
+
+
+def test_track_openai_response_extracts_usage() -> None:
+    captured_body: dict[str, object] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured_body
+        captured_body = json.loads(request.content.decode())
+        return httpx.Response(200, json={"message": "accepted"})
+
+    client = AsertuOptimizerClient(
+        tenant_api_key="tenant-key",
+        http_client=httpx.Client(
+            base_url="https://api.dev.asertu.ai",
+            transport=httpx.MockTransport(handler),
+        ),
+    )
+
+    client.events.track_openai_response(
+        feature="support_chat",
+        status="success",
+        response={
+            "model": "gpt-4.1-mini",
+            "usage": {
+                "prompt_tokens": 111,
+                "completion_tokens": 222,
+                "total_tokens": 333,
+            },
+        },
+    )
+
+    assert captured_body["provider"] == "openai"
+    assert captured_body["prompt_tokens"] == 111
+    assert captured_body["completion_tokens"] == 222
+    assert captured_body["total_tokens"] == 333
+
+
+def test_async_events_track_llm_call() -> None:
+    async def run() -> None:
+        captured_body: dict[str, object] = {}
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            nonlocal captured_body
+            captured_body = json.loads(request.content.decode())
+            return httpx.Response(200, json={"message": "accepted", "tenant_id": "tenant-1"})
+
+        client = AsyncAsertuOptimizerClient(
+            tenant_api_key="tenant-key",
+            http_client=httpx.AsyncClient(
+                base_url="https://api.dev.asertu.ai",
+                transport=httpx.MockTransport(handler),
+            ),
+        )
+        try:
+            result = await client.events.track_openai_call(
+                model="gpt-4.1-mini",
+                feature="async_chat",
+                input_tokens=12,
+                output_tokens=34,
+                status="success",
+            )
+        finally:
+            await client.aclose()
+
+        assert result.tenant_id == "tenant-1"
+        assert captured_body["provider"] == "openai"
+        assert captured_body["total_tokens"] == 46
+
+    asyncio.run(run())
+
+
+def test_async_dashboard_summary() -> None:
+    async def run() -> None:
+        def handler(request: httpx.Request) -> httpx.Response:
+            assert request.headers["Authorization"] == "Bearer jwt-token"
+            assert request.headers["X-Tenant-Id"] == "tenant-123"
+            return httpx.Response(
+                200,
+                json={
+                    "tenant_id": "tenant-123",
+                    "from": "2026-03-27",
+                    "to": "2026-03-27",
+                    "total_requests": 7,
+                    "total_tokens": 700,
+                    "total_cost": 1.23,
+                    "total_errors": 0,
+                },
+            )
+
+        client = AsyncAsertuOptimizerClient(
+            bearer_token="jwt-token",
+            tenant_id="tenant-123",
+            http_client=httpx.AsyncClient(
+                base_url="https://api.dev.asertu.ai",
+                transport=httpx.MockTransport(handler),
+            ),
+        )
+        try:
+            result = await client.analytics.dashboard_summary(preset="today")
+        finally:
+            await client.aclose()
+
+        assert result.total_requests == 7
+        assert result.total_cost == 1.23
+
+    asyncio.run(run())

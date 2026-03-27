@@ -7,11 +7,13 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 ## Script principal
 
 - [`playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/playground.py)
+- [`async_playground.py`](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/async_playground.py)
 
 ## Flujos actuales
 
 - `track-event`: envia un evento LLM
 - `track-openai-event`: envia un evento OpenAI usando helper dedicado
+- `track-openai-response`: transforma una respuesta OpenAI en evento
 - `list-tenants`: lista tenants por JWT
 - `analytics-summary`: consulta resumen del dashboard
 - `history-daily-cost`: consulta coste historico
@@ -29,5 +31,7 @@ La idea es ir anadiendo nuevos metodos y flujos completos conforme el SDK crezca
 ```bash
 python3 example/playground.py track-event
 python3 example/playground.py track-openai-event
+python3 example/playground.py track-openai-response
 python3 example/playground.py analytics-summary --preset today
+python3 example/async_playground.py analytics-summary --preset today
 ```

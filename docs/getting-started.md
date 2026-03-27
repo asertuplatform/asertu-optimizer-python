@@ -42,3 +42,13 @@ client.events.track_openai_call(
 summary = client.analytics.dashboard_summary(preset="today")
 print(summary.total_cost)
 ```
+
+## Variante async
+
+```python
+from asertu_optimizer import AsyncAsertuOptimizerClient
+
+client = AsyncAsertuOptimizerClient.from_env()
+summary = await client.analytics.dashboard_summary(preset="today")
+await client.aclose()
+```

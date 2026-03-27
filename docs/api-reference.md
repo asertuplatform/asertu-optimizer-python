@@ -8,6 +8,7 @@
 - `AsertuOptimizerClient.analytics`
 - `AsertuOptimizerClient.history`
 - `AsertuOptimizerClient.from_env()`
+- `AsyncAsertuOptimizerClient.*`
 
 ## Events
 
@@ -16,6 +17,9 @@
 - `track_openai_call(...)`
 - `track_anthropic_call(...)`
 - `track_bedrock_call(...)`
+- `track_openai_response(...)`
+- `track_anthropic_response(...)`
+- `track_bedrock_response(...)`
 
 ## Tenants
 

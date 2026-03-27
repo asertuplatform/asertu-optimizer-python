@@ -17,6 +17,7 @@ La base del SDK ya incluye:
 - insights y recommendations
 - helpers para OpenAI, Anthropic y Bedrock
 - constructor `AsertuOptimizerClient.from_env()`
+- cliente async `AsyncAsertuOptimizerClient`
 - tests, ejemplo ejecutable y documentacion del repo
 
 ## Estructura del repositorio
@@ -33,6 +34,7 @@ La base del SDK ya incluye:
 - [Arquitectura del SDK](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/architecture.md)
 - [Autenticacion](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/authentication.md)
 - [Referencia de API](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/api-reference.md)
+- [Async e instrumentacion](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/async-and-instrumentation.md)
 - [Desarrollo y release](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/docs/development.md)
 - [Ejemplos](/Users/franciscoantoniotorresjackson/Library/Mobile Documents/com~apple~CloudDocs/Proyectos/Asertu/repositories/asertu-optimizer-python/example/README.md)
 
@@ -76,8 +78,18 @@ client = AsertuOptimizerClient(
 summary = client.analytics.dashboard_summary(preset="today")
 ```
 
+Uso async:
+
+```python
+from asertu_optimizer import AsyncAsertuOptimizerClient
+
+async_client = AsyncAsertuOptimizerClient.from_env()
+summary = await async_client.analytics.dashboard_summary(preset="today")
+await async_client.aclose()
+```
+
 ## Contrato actual
 
-El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). En el contrato actual ya aparecen `events`, `tenants`, `analytics`, `insights`, `recommendations` e `history`.
+El SDK toma como fuente de verdad el Swagger publicado en [optimizer.dev.asertu.ai](https://optimizer.dev.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato sigue publicando `version: 1.23.19` y mantiene `events`, `tenants`, `analytics`, `insights`, `recommendations` e `history`.
 
 Los endpoints admin para crear tenant y hacer upsert de pricing todavia no aparecen en el contrato OpenAPI publicado. Por eso el SDK expone esas superficies, pero hoy responden con una excepcion explicita `ContractUnavailableError` en vez de adivinar rutas no oficiales.
