@@ -38,7 +38,7 @@ def test_openapi_contract_version_and_paths() -> None:
     paths = cast(dict[str, Any], contract["paths"])
 
     assert contract["openapi"] == "3.0.3"
-    assert info["version"] == "1.24.7"
+    assert info["version"] == "1.24.11"
     assert "/v1/events" in paths
     assert "/v1/tenants" in paths
     assert "/v1/settings/workspace" in paths
@@ -108,3 +108,12 @@ def test_openapi_contract_exposes_expected_schemas() -> None:
     settings_properties = cast(dict[str, Any], schemas["WorkspaceSettingsResponse"]["properties"])
     assert "permissions" in settings_properties
     assert "notifications" in settings_properties
+    event_schema = cast(dict[str, Any], schemas["EventIngestionRequest"])
+    event_properties = cast(dict[str, Any], event_schema["properties"])
+    event_type_schema = cast(dict[str, Any], event_properties["event_type"])
+    assert event_type_schema["example"] == "ai.request.completed"
+    assert event_type_schema["enum"] == [
+        "ai.request.started",
+        "ai.request.completed",
+        "ai.request.failed",
+    ]

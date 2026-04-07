@@ -42,7 +42,7 @@ class AsyncEventsResource(AsyncBaseResource):
         timestamp: datetime | None = None,
         metadata: dict[str, Any] | None = None,
         tenant_api_key: str | None = None,
-        event_type: str = "llm_request",
+        event_type: str = "ai.request.completed",
     ) -> EventIngestionResponse:
         event = EventIngestionRequest(
             provider=provider,
@@ -84,7 +84,7 @@ class AsyncEventsResource(AsyncBaseResource):
         timestamp: datetime | None = None,
         metadata: dict[str, Any] | None = None,
         cost: float | None = None,
-        event_type: str = "llm_request",
+        event_type: str = "ai.request.completed",
     ) -> EventIngestionResponse:
         usage = extract_provider_usage(provider, response, model=model)
         return await self.track_llm_call(

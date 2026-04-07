@@ -56,6 +56,7 @@ def test_events_track_llm_call_sends_pythonic_payload() -> None:
     assert captured_path == "/v1/events"
     assert captured_headers["x-api-key"] == "tenant-key"
     assert captured_body["provider"] == "openai"
+    assert captured_body["event_type"] == "ai.request.completed"
     assert captured_body["prompt_tokens"] == 1200
     assert captured_body["completion_tokens"] == 800
     assert captured_body["total_tokens"] == 2000
@@ -87,6 +88,7 @@ def test_track_openai_call_sets_provider_implicitly() -> None:
     )
 
     assert captured_body["provider"] == "openai"
+    assert captured_body["event_type"] == "ai.request.completed"
 
 
 def test_tenants_list_uses_bearer_auth() -> None:

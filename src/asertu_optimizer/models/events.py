@@ -25,7 +25,7 @@ class EventIngestionRequest:
     feature: str
     status: str
     schema_version: str = "1.0"
-    event_type: str = "llm_request"
+    event_type: str = "ai.request.completed"
     request_id: str = field(default_factory=lambda: str(uuid4()))
     timestamp: datetime | None = None
     user_id: str | None = None

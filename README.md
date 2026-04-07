@@ -99,7 +99,9 @@ await async_client.aclose()
 
 ## Contrato actual
 
-El SDK toma como fuente de verdad el Swagger publicado del producto en [optimizer.asertu.ai](https://optimizer.asertu.ai/swagger/index.html). Revalidado hoy, 7 de abril de 2026, el contrato publicado sube a `version: 1.24.7` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
+El SDK toma como fuente de verdad el Swagger publicado del producto en [optimizer.asertu.ai](https://optimizer.asertu.ai/swagger/index.html). Revalidado hoy, 7 de abril de 2026, el contrato publicado sube a `version: 1.24.11` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
+
+Para eventos de ingesta, el contrato publico actual documenta `ai.request.completed` como valor por defecto recomendado para `event_type`, y el SDK queda alineado con ese comportamiento.
 
 Los endpoints paginables publicados hoy son:
 
