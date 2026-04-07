@@ -29,7 +29,7 @@ ASERTU_RUN_LIVE_CONTRACT_TEST=1 python3 -m pytest tests/test_openapi_contract.py
 
 ## Smoke workflow
 
-El smoke workflow ejecuta [`scripts/smoke_check.py`](../scripts/smoke_check.py) con secrets de GitHub Actions para validar llamadas reales contra dev.
+El smoke workflow ejecuta [`scripts/smoke_check.py`](../scripts/smoke_check.py) con secrets de GitHub Actions para validar llamadas reales contra el entorno configurado.
 
 Secrets esperados:
 
@@ -37,3 +37,6 @@ Secrets esperados:
 - `ASERTU_BEARER_TOKEN`
 - `ASERTU_TENANT_ID`
 - `ASERTU_TENANT_API_KEY`
+
+Tambien se aceptan aliases `OPTIMIZER_BASE_URL`, `OPTIMIZER_BEARER_TOKEN`,
+`OPTIMIZER_TENANT_ID` y `OPTIMIZER_API_KEY` para facilitar pruebas locales contra prod.

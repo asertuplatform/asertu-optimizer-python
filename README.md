@@ -79,7 +79,7 @@ Para consultas tenant-scoped:
 
 ```python
 client = AsertuOptimizerClient(
-    base_url="https://api.asertu.ai",
+    base_url="https://api.optimizer.asertu.ai",
     bearer_token="jwt-token",
     tenant_id="tenant-123",
 )
@@ -99,7 +99,7 @@ await async_client.aclose()
 
 ## Contrato actual
 
-El SDK toma como fuente de verdad el Swagger publicado del producto en [optimizer.asertu.ai](https://optimizer.asertu.ai/swagger/index.html). Revalidado hoy, 27 de marzo de 2026, el contrato publicado sube a `version: 1.23.23` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
+El SDK toma como fuente de verdad el Swagger publicado del producto en [optimizer.asertu.ai](https://optimizer.asertu.ai/swagger/index.html). Revalidado hoy, 7 de abril de 2026, el contrato publicado sube a `version: 1.24.7` y cubre `events`, `tenants`, `analytics`, `insights`, `recommendations`, `history`, `billing` y `settings`.
 
 Los endpoints paginables publicados hoy son:
 

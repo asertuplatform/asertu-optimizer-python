@@ -417,6 +417,24 @@ def test_from_env_builds_client(monkeypatch: pytest.MonkeyPatch) -> None:
     assert client.auth.tenant_id == "tenant-123"
 
 
+def test_from_env_supports_optimizer_aliases(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ASERTU_BASE_URL", raising=False)
+    monkeypatch.delenv("ASERTU_TENANT_API_KEY", raising=False)
+    monkeypatch.delenv("ASERTU_BEARER_TOKEN", raising=False)
+    monkeypatch.delenv("ASERTU_TENANT_ID", raising=False)
+    monkeypatch.setenv("OPTIMIZER_BASE_URL", "https://api.optimizer.asertu.ai")
+    monkeypatch.setenv("OPTIMIZER_API_KEY", "tenant-key")
+    monkeypatch.setenv("OPTIMIZER_BEARER_TOKEN", "jwt-token")
+    monkeypatch.setenv("OPTIMIZER_TENANT_ID", "tenant-123")
+
+    client = AsertuOptimizerClient.from_env()
+
+    assert client.config.base_url == "https://api.optimizer.asertu.ai"
+    assert client.auth.tenant_api_key == "tenant-key"
+    assert client.auth.bearer_token == "jwt-token"
+    assert client.auth.tenant_id == "tenant-123"
+
+
 def test_track_openai_response_extracts_usage() -> None:
     captured_body: dict[str, object] = {}
 
@@ -786,7 +804,7 @@ def test_settings_access_requests_support_scope_and_pagination() -> None:
 
 def test_settings_resolve_public_invitation_without_auth() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.path == "/v1/settings/invitations"
+        assert request.url.path == "/v1/public/invitations"
         assert request.url.params["token"] == "invite-token"
         assert "Authorization" not in request.headers
         return httpx.Response(

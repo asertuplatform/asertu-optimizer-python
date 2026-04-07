@@ -18,7 +18,7 @@ client = AsertuOptimizerClient.from_env()
 
 ```python
 client = AsertuOptimizerClient(
-    base_url="https://api.asertu.ai",
+    base_url="https://api.optimizer.asertu.ai",
     bearer_token="jwt-token",
     tenant_id="tenant-123",
 )

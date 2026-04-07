@@ -22,11 +22,17 @@ from .telemetry import TelemetryHandler
 class AsertuOptimizerClient:
     @classmethod
     def from_env(cls) -> AsertuOptimizerClient:
+        base_url = (
+            os.getenv("ASERTU_BASE_URL") or os.getenv("OPTIMIZER_BASE_URL") or DEFAULT_BASE_URL
+        )
+        tenant_api_key = os.getenv("ASERTU_TENANT_API_KEY") or os.getenv("OPTIMIZER_API_KEY")
+        bearer_token = os.getenv("ASERTU_BEARER_TOKEN") or os.getenv("OPTIMIZER_BEARER_TOKEN")
+        tenant_id = os.getenv("ASERTU_TENANT_ID") or os.getenv("OPTIMIZER_TENANT_ID")
         return cls(
-            base_url=os.getenv("ASERTU_BASE_URL", DEFAULT_BASE_URL),
-            tenant_api_key=os.getenv("ASERTU_TENANT_API_KEY"),
-            bearer_token=os.getenv("ASERTU_BEARER_TOKEN"),
-            tenant_id=os.getenv("ASERTU_TENANT_ID"),
+            base_url=base_url,
+            tenant_api_key=tenant_api_key,
+            bearer_token=bearer_token,
+            tenant_id=tenant_id,
         )
 
     def __init__(

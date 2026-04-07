@@ -164,7 +164,7 @@ class AsyncSettingsResource(AsyncBaseResource):
             raise ValidationError("token must not be empty.")
         data = await self.http_client.request(
             "GET",
-            "/v1/settings/invitations",
+            "/v1/public/invitations",
             params={"token": token},
         )
         return PublicInvitationLookup.from_dict(dict(data))

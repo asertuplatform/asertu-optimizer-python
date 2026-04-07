@@ -10,7 +10,7 @@ import yaml
 
 CONTRACT_URL = os.getenv(
     "ASERTU_CONTRACT_URL",
-    "https://optimizer.dev.asertu.ai/openapi/optimizer-openapi.yaml",
+    "https://optimizer.asertu.ai/openapi/optimizer-openapi.yaml",
 )
 RUN_LIVE_CONTRACT_TEST = os.getenv("ASERTU_RUN_LIVE_CONTRACT_TEST") == "1"
 
@@ -38,7 +38,7 @@ def test_openapi_contract_version_and_paths() -> None:
     paths = cast(dict[str, Any], contract["paths"])
 
     assert contract["openapi"] == "3.0.3"
-    assert info["version"] == "1.23.23"
+    assert info["version"] == "1.24.7"
     assert "/v1/events" in paths
     assert "/v1/tenants" in paths
     assert "/v1/settings/workspace" in paths
@@ -80,7 +80,7 @@ def test_openapi_contract_version_and_paths() -> None:
         cast(dict[str, Any], component_parameters[item["$ref"].split("/")[-1]])["name"]
         for item in invitation_parameters
     ]
-    assert invitation_names == ["token", "limit", "cursor"]
+    assert invitation_names == ["limit", "cursor"]
 
 
 def test_openapi_contract_exposes_expected_schemas() -> None:
