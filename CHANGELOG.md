@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 2026-04-07
+
+- alinea la ingesta de eventos con el contrato publico `1.24.11`
+- usa `ai.request.completed` como `event_type` por defecto para eventos completados
+- valida de extremo a extremo la ingesta real contra produccion con respuestas `202 Accepted`
+
 ## 1.0.1 - 2026-03-27
 
 - restaura enlaces publicos al repositorio, ejemplos y documentacion tecnica desde la metadata del paquete y el `README`
