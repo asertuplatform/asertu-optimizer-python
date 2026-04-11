@@ -6,5 +6,6 @@ __pycache__/
 .coverage
 dist/
 .DS_Store
+.env
 onlylocal/
 src/asertu/
